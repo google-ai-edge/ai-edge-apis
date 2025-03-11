@@ -1,6 +1,6 @@
-# ODML On-device RAG SDK
+# AI Edge On-device RAG SDK
 
-The ODML on-device RAG SDK provides fundamental components for constructing a
+The AI Edge on-device RAG SDK provides fundamental components for constructing a
 RAG (Retrieval Augmented Generation) pipeline on device. The SDK's modular
 architecture offers easy-to-use abstractions and a variety of concrete
 implementations for its key building blocks. The SDK is currently available in
