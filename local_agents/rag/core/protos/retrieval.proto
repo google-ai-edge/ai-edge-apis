@@ -1,0 +1,48 @@
+// Copyright 2025 The Google AI Edge Authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto2";
+
+package rag.core;
+
+import "local_agents/rag/core/protos/memory.proto";
+
+option java_multiple_files = true;
+option java_package = "com.google.ai.edge.localagents.rag.retrieval.proto";
+
+message RetrievalConfig {
+  enum TaskType {
+    TASK_UNSPECIFIED = 0;
+    RETRIEVAL_QUERY = 1;
+    QUESTION_ANSWERING = 2;
+  }
+  optional int32 top_k = 1 [default = 5];
+  optional float min_similarity_score = 2 [default = 0.0];
+  optional TaskType task = 3 [default = RETRIEVAL_QUERY];
+}
+
+message RetrievalRequest {
+  optional string query = 1;
+  optional RetrievalConfig config = 2;
+}
+
+message RetrievalEntity {
+  optional string text = 1;
+  repeated float embeddings = 2 [packed = true];
+  optional Metadata metadata = 3;
+}
+
+message RetrievalResponse {
+  repeated RetrievalEntity entities = 1;
+}
