@@ -54,7 +54,6 @@ android_library(
         "@com_google_protobuf//:protobuf_java",
         "@maven//:com_google_android_android",
         "@maven//:com_google_guava_guava",
-        "@maven//:com_google_mediapipe_tasks_core",
         "@maven//:com_google_mediapipe_tasks_genai",
         "@maven//:com_squareup_okhttp3_okhttp",
         "@maven//:org_checkerframework_checker_qual",

@@ -74,7 +74,6 @@ android_library(
         ":language_model",
         "@maven//:com_google_android_android",
         "@maven//:com_google_guava_guava",
-        "@maven//:com_google_mediapipe_tasks_core",
         "@maven//:com_google_mediapipe_tasks_genai",
         "@maven//:org_checkerframework_checker_qual",
         "@maven//:org_jspecify_jspecify",
