@@ -27,16 +27,16 @@ Steps to run the sample app:
 1) Connect an Android phone to your workstation. We currently target higher end devices such as
    Pixel 8, Pixel 9, S23 and S24.
 
-2) Download [Gemma model](https://www.kaggle.com/models/google/gemma-2/tfLite/gemma2-2b-it-gpu-int8) to your workstation and push to device:
+2) Download [Gemma3]https://huggingface.co/litert-community/Gemma3-1B-IT/resolve/main/gemma3-1b-it-int4.task?download=true) to your workstation and push to device:
 
 ```
-adb push /tmp/gemma2-2b-it-gpu-int8.gin /data/local/tmp/gemma2-2b-it-gpu-int8.gin
+adb push /tmp/gemma3-1b-it-int4.task /data/local/tmp/gemma3-1b-it-int4.task
 ```
 
 3) If you want to use the `GeckoEmbeddingModel`, you need to push the tokenizer
    model (`sentencepiece.model`) and a Gecko embedding model to your device. We offer two different
    model versions that are optimized for either CPU or GPU execution. The sample app is currently
-   configured to extraction embeeddings via GPU (see `USE_GPU_FOR_EMBEDDINGS` in `RagPipeline.kt`).
+   configured to extraction embeddings via GPU (see `USE_GPU_FOR_EMBEDDINGS` in `RagPipeline.kt`).
 
    You can downlaod the Gecko model and the tokenizer from our [HuggingFace community](https://huggingface.co/litert-community/Gecko-110m-en)
 
