@@ -40,12 +40,12 @@ adb push /tmp/gemma2-2b-it-gpu-int8.gin /data/local/tmp/gemma2-2b-it-gpu-int8.gi
 
    You can downlaod the Gecko model and the tokenizer from our [HuggingFace community](https://huggingface.co/litert-community/Gecko-110m-en)
 
-   To push the tokenizer model and the `Gecko_256_fp32.tflite` embedding model to your device, you
+   To push the tokenizer model and the `Gecko_256_quant.tflite` embedding model to your device, you
    can for example run:
 
 ```
 adb push sentencepiece.model /data/local/tmp/sentencepiece.model
-adb push Gecko_256_fp32.tflite /data/local/tmp/gecko.tflite
+adb push Gecko_256_quant.tflite /data/local/tmp/gecko.tflite
 ```
 
 6) If you want to use `GeminiEmbedder` and compute embeddings via the Gemini Cloud API, you need to
