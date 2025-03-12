@@ -137,7 +137,7 @@ class RagPipeline(private val application: Application) {
     private const val USE_GPU_FOR_EMBEDDINGS = true
     private const val CHUNK_SEPARATOR = "<chunk_splitter>"
 
-    private const val GEMMA_MODEL_PATH = "/data/local/tmp/gemma2-2b-it-gpu-int8.bin"
+    private const val GEMMA_MODEL_PATH = "/data/local/tmp/gemma3-1b-it-int4.task"
     private const val TOKENIZER_MODEL_PATH = "/data/local/tmp/sentencepiece.model"
     private const val GECKO_MODEL_PATH = "/data/local/tmp/gecko.tflite"
     private const val GEMINI_EMBEDDING_MODEL = "models/text-embedding-004"
