@@ -1,0 +1,38 @@
+<chunk_splitter>
+I like going to the movies
+<chunk_splitter>
+I don't like strawberries
+<chunk_splitter>
+I am afraid of heights
+<chunk_splitter>
+I went skydiving once
+<chunk_splitter>
+Skydiving was not as scary as I thought
+<chunk_splitter>
+I like driving and learning about cars
+<chunk_splitter>
+I studied philosophy in college
+<chunk_splitter>
+I work in marketing
+<chunk_splitter>
+I am 32 years old
+<chunk_splitter>
+I like traveling
+<chunk_splitter>
+I have traveled to 18 different countries so far
+<chunk_splitter>
+I like rock climbing and I am now learning how to lead.
+<chunk_splitter>
+I once broke my ankle while climbing.
+<chunk_splitter>
+I like bouldering, and I'm scared of trad climbing.
+<chunk_splitter>
+I like reading
+<chunk_splitter>
+Lately I don't have as much time to read as I would like.
+<chunk_splitter>
+Basketball is a great sport.
+<chunk_splitter>
+Fly me to the moon is one of my favourite songs.
+<chunk_splitter>
+The Celtics are my favourite team.
