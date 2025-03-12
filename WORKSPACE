@@ -32,15 +32,6 @@ http_archive(
     url = "https://github.com/bazelbuild/rules_java/releases/download/5.3.5/rules_java-5.3.5.tar.gz",
 )
 
-load("@rules_java//java:repositories.bzl", "java_register_toolchains", "rules_java_dependencies")
-
-rules_java_dependencies()
-
-java_register_toolchains(
-    name = "default_toolchain",
-    jdk_version = "21",
-)
-
 http_archive(
     name = "rules_android_ndk",
     sha256 = "d230a980e0d3a42b85d5fce2cb17ec3ac52b88d2cff5aaf86bae0f05b48adc55",

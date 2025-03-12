@@ -1,14 +1,3 @@
-*.iml
-.DS_Store
-.DS_Store
-.configure.bazelrc
-.cxx
-.externalNativeBuild
-.gradle
-.idea
-.user.bazelrc
-/build
-/captures
-/local.properties
 bazel-*
-local.properties
+.configure.bazelrc
+.user.bazelrc
