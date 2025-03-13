@@ -1,6 +1,9 @@
-build --repo_env=CC=clang
+build --repo_env=CC=clang-18
 
-build --java_language_version=11
+build --java_runtime_version=21
+build --java_language_version=21
+build --tool_java_language_version=21
+build --tool_java_runtime_version=21
 
 build:android --crosstool_top=//external:android/crosstool
 build:android --host_crosstool_top=@bazel_tools//tools/cpp:toolchain

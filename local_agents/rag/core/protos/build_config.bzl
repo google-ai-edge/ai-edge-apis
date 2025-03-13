@@ -1,8 +1,6 @@
 """Provides BUILD macros for ODML proto-buffers.
 """
 
-load("@com_google_protobuf//:protobuf.bzl", "cc_proto_library")
-
 _proto_library = native.proto_library
 java_proto_library = native.java_proto_library
 java_lite_proto_library = native.java_lite_proto_library
@@ -154,40 +152,10 @@ def ai_edge_proto_library(
         def_java_proto = def_java_proto,
     )
 
-def ai_edge_cc_proto_library_oss(
-        name,
-        srcs,
-        visibility = None,
-        deps = [],
-        cc_deps = [],
-        testonly = 0):
-    """Generates cc_proto_library for ODML open source version.
-
-      Args:
-        name: the name of the cc_proto_library.
-        srcs: the .proto files of the cc_proto_library for Bazel use.
-        visibility: visibility of this target.
-        deps: a list of dependency labels for Bazel use; must be cc_proto_library.
-        testonly: test only proto or not.
-    """
-    _ignore = [deps]  # buildifier: disable=unused-variable
-
-    cc_proto_library(**provided_args(
-        name = name,
-        srcs = srcs,
-        visibility = visibility,
-        deps = cc_deps,
-        testonly = testonly,
-        cc_libs = ["@com_google_protobuf//:protobuf"],
-        protoc = "@com_google_protobuf//:protoc",
-        default_runtime = "@com_google_protobuf//:protobuf",
-        alwayslink = 1,
-    ))
-
 def proto_library(**kwargs):
     """Needed for ai_edge_proto_library_oss()."""
     _ignored = [kwargs]  # buildifier: disable=unused-variable
     pass
 
 def ai_edge_cc_proto_library(**kwargs):
-    ai_edge_cc_proto_library_oss(**kwargs)
+    pass

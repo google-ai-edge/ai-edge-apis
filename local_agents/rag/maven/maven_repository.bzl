@@ -1,6 +1,6 @@
 """Starlark rule to create a maven repository from a single artifact."""
 
-load("@build_bazel_rules_android//android:rules.bzl", "android_binary")
+load("@rules_android//android:rules.bzl", "android_binary")
 
 _pom_tmpl = "\n".join([
     '<?xml version="1.0" encoding="UTF-8"?>',

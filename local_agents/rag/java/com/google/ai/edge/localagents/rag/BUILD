@@ -13,7 +13,7 @@
 # limitations under the License.
 
 load("@ai_edge_apis//local_agents/rag/maven:maven_repository.bzl", "android_jni_aar", "maven_artifact")
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")
+load("@rules_android//android:rules.bzl", "android_library")
 load("//third_party:ai_edge_files.bzl", "ai_edge_files")
 
 package(default_visibility = [
@@ -51,7 +51,6 @@ android_library(
     ],
     deps = [
         "//third_party:autovalue",
-        "@com_google_protobuf//:protobuf_java",
         "@maven//:com_google_android_android",
         "@maven//:com_google_guava_guava",
         "@maven//:com_google_mediapipe_tasks_genai",
@@ -59,6 +58,7 @@ android_library(
         "@maven//:org_checkerframework_checker_qual",
         "@maven//:org_json_json",
         "@maven//:org_jspecify_jspecify",
+        "@protobuf//:protobuf_java",
     ],
 )
 

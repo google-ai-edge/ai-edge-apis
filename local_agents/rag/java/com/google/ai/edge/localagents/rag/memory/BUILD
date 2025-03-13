@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("@build_bazel_rules_android//android:rules.bzl", "android_library")  # All libraries pass nullness check
+load("@rules_android//android:rules.bzl", "android_library")
 
 package(default_visibility = [
     ":default_visibility",
@@ -91,8 +91,8 @@ android_library(
         ":semantic_memory",
         "@ai_edge_apis//local_agents/rag/core/protos:memory_java_proto_lite",
         "@ai_edge_apis//local_agents/rag/core/protos:vector_stores_java_proto_lite",
-        "@com_google_protobuf//:protobuf_java",
         "@maven//:com_google_guava_guava",
+        "@protobuf//:protobuf_java",
     ],
 )
 
