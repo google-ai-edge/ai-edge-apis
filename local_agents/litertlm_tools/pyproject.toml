@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "litertlm-tools"
+version = "0.0.1"
+description = "Developer-facing tooling for the execution and configuration of LiteRT language models."
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+]
+dependencies = [
+    "ai-edge-litert",
+    "numpy",
+    "transformers",
+    "huggingface_hub",
+    "sentencepiece",
+    "jinja2"
+]

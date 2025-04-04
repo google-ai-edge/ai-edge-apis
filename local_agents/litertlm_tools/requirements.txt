@@ -1,0 +1,6 @@
+ai-edge-litert
+numpy
+transformers
+huggingface_hub
+sentencepiece
+jinja2
