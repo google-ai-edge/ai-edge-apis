@@ -43,7 +43,7 @@ java_plugin(
     ],
 )
 
-java_library(
+android_library(
     name = "autovalue",
     exported_plugins = [
         ":autovalue_plugin",
