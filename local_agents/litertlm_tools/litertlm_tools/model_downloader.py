@@ -47,7 +47,6 @@ class HuggingFaceDownloader(ModelDownloader):
     super().__init__(cache_dir)
 
   def download_file(self, repo_id: str, filename: str) -> str | None:
-    super().download_file(repo_id, filename)
     local_file_path = os.path.join(self.cache_dir, repo_id, filename)
     if os.path.exists(local_file_path):
       logging.info(
