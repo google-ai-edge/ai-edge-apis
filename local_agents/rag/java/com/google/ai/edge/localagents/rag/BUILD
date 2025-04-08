@@ -58,7 +58,7 @@ android_library(
         "@maven//:org_checkerframework_checker_qual",
         "@maven//:org_json_json",
         "@maven//:org_jspecify_jspecify",
-        "@protobuf//:protobuf_java",
+        "@protobuf//:protobuf_javalite",
     ],
 )
 

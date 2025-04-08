@@ -13,6 +13,8 @@ bazel_dep(name = "rules_android_ndk", version = "0.1.3")
 bazel_dep(name = "rules_cc", version = "0.0.17")
 bazel_dep(name = "rules_jvm_external", version = "6.7")
 bazel_dep(name = "rules_python", version = "1.2.0")
+bazel_dep(name = "googleapis-java", version = "1.0.0")
+bazel_dep(name = "googleapis", version = "0.0.0-20241220-5e258e33.bcr.1")
 
 android_ndk_repository_extension = use_extension("@rules_android_ndk//:extension.bzl", "android_ndk_repository_extension")
 use_repo(android_ndk_repository_extension, "androidndk")
@@ -26,6 +28,14 @@ use_repo(non_module_dependencies, "ai_edge_apis_rag_pipeline_x86_64_libsqlite_ve
 use_repo(non_module_dependencies, "ai_edge_apis_rag_pipeline_android_arm64_libsqlite_vector_store_jni_so")
 use_repo(non_module_dependencies, "ai_edge_apis_rag_pipeline_x86_64_libgecko_embedding_model_jni_so")
 use_repo(non_module_dependencies, "ai_edge_apis_rag_pipeline_android_arm64_libgecko_embedding_model_jni_so")
+use_repo(non_module_dependencies, "ai_edge_apis_function_calling_x86_64_libjni_gemini_nano_formatter_android_so")
+use_repo(non_module_dependencies, "ai_edge_apis_function_calling_android_arm64_libjni_gemini_nano_formatter_android_so")
+use_repo(non_module_dependencies, "ai_edge_apis_function_calling_x86_64_libjni_gemma_formatter_android_so")
+use_repo(non_module_dependencies, "ai_edge_apis_function_calling_android_arm64_libjni_gemma_formatter_android_so")
+use_repo(non_module_dependencies, "ai_edge_apis_function_calling_x86_64_libjni_llama_formatter_android_so")
+use_repo(non_module_dependencies, "ai_edge_apis_function_calling_android_arm64_libjni_llama_formatter_android_so")
+use_repo(non_module_dependencies, "ai_edge_apis_function_calling_x86_64_libjni_fst_constraint_android_so")
+use_repo(non_module_dependencies, "ai_edge_apis_function_calling_android_arm64_libjni_fst_constraint_android_so")
 
 maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 maven.install(
@@ -34,8 +44,9 @@ maven.install(
         "com.google.auto.value:auto-value-annotations:1.11.0",
         "com.google.auto.value:auto-value:1.11.0",
         "com.google.android:android:4.1.1.4",
+        "com.google.errorprone:error_prone_annotations:2.37.0",
         "com.google.guava:guava:33.3.1-android",
-        "com.google.mediapipe:tasks-genai:0.10.22",
+        "com.google.mediapipe:tasks-genai:0.10.23",
         "com.squareup.okhttp3:okhttp:4.12.0",
         "org.checkerframework:checker-qual:3.20.0",
         "org.json:json:20250107",

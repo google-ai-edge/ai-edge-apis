@@ -92,7 +92,7 @@ android_library(
         "@ai_edge_apis//local_agents/rag/core/protos:memory_java_proto_lite",
         "@ai_edge_apis//local_agents/rag/core/protos:vector_stores_java_proto_lite",
         "@maven//:com_google_guava_guava",
-        "@protobuf//:protobuf_java",
+        "@protobuf//:protobuf_javalite",
     ],
 )
 
