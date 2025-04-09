@@ -6,6 +6,7 @@ module(
     repo_name = "ai_edge_apis",
 )
 
+bazel_dep(name = "abseil-cpp", version = "20250127.1")
 bazel_dep(name = "platforms", version = "0.0.10")
 bazel_dep(name = "protobuf", version = "29.3")
 bazel_dep(name = "rules_android", version = "0.6.3")

@@ -4,6 +4,7 @@
 _proto_library = native.proto_library
 java_proto_library = native.java_proto_library
 java_lite_proto_library = native.java_lite_proto_library
+cc_proto_library = native.cc_proto_library
 
 def provided_args(**kwargs):
     """Returns the keyword arguments omitting None arguments."""
@@ -76,13 +77,9 @@ def ai_edge_proto_library_impl(
         ))
 
     if def_cc_proto:
-        cc_deps = replace_deps(deps, "_proto", "_cc_proto")
-
-        ai_edge_cc_proto_library(**provided_args(
+        cc_proto_library(**provided_args(
             name = replace_suffix(name, "_proto", "_cc_proto"),
-            srcs = srcs,
             deps = proto_deps,
-            cc_deps = cc_deps,
             visibility = visibility,
             testonly = testonly,
             compatible_with = compatible_with,
@@ -151,11 +148,3 @@ def ai_edge_proto_library(
         def_java_lite_proto = def_java_lite_proto,
         def_java_proto = def_java_proto,
     )
-
-def proto_library(**kwargs):
-    """Needed for ai_edge_proto_library_oss()."""
-    _ignored = [kwargs]  # buildifier: disable=unused-variable
-    pass
-
-def ai_edge_cc_proto_library(**kwargs):
-    pass
