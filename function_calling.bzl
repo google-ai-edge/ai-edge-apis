@@ -12,36 +12,36 @@ def function_calling_files():
 
     http_file(
         name = "ai_edge_apis_function_calling_android_arm64_libjni_gemma_formatter_android_so",
-        sha256 = "96bb817943f3bbaec4ac8b00c1877f792f1a13d28e66d0e61d6fef4d55e7c891",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/function_calling/android_arm64/libjni_gemma_formatter_android.so?generation=1744058880879941"],
+        sha256 = "05ff0c84d7d85548d8002acd96d4e25b01f9dbd1aab3465253c96f63ab46610a",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/function_calling/android_arm64/libjni_gemma_formatter_android.so?generation=1744239171603919"],
     )
 
     http_file(
         name = "ai_edge_apis_function_calling_x86_64_libjni_gemma_formatter_android_so",
-        sha256 = "09218abb6649f16d3d4d8b036a95f1a75071b2759f9bbc0fd77521ce6222d50b",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/function_calling/x86_64/libjni_gemma_formatter_android.so?generation=1744058880954737"],
+        sha256 = "24663568de58392dbf007d61d76875e5a34fc891b6b987f68ef40e3641a63535",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/function_calling/x86_64/libjni_gemma_formatter_android.so?generation=1744239171716834"],
     )
 
     http_file(
         name = "ai_edge_apis_function_calling_android_arm64_libjni_llama_formatter_android_so",
-        sha256 = "8f2a1539cd6b090ad89705f294b20a7b9fdc1b858dd561ea1b5c62b76847a930",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/function_calling/android_arm64/libjni_llama_formatter_android.so?generation=1744058880880014"],
+        sha256 = "cf54b63814fe063d5a9a498c3f43f5685181552e8ed89b9b8194336f8eff0163",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/function_calling/android_arm64/libjni_llama_formatter_android.so?generation=1744239171661359"],
     )
 
     http_file(
         name = "ai_edge_apis_function_calling_x86_64_libjni_llama_formatter_android_so",
-        sha256 = "4399da0c5caf735a79a0902ea88014c748c0c4ed9a0e32941757d114944da640",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/function_calling/x86_64/libjni_llama_formatter_android.so?generation=1744058880932969"],
+        sha256 = "58f28cef72fe43d080fbb50108978433952422dc157af8bc6d7e2d5b26b70775",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/function_calling/x86_64/libjni_llama_formatter_android.so?generation=1744239171741345"],
     )
 
     http_file(
         name = "ai_edge_apis_function_calling_android_arm64_libjni_fst_constraint_android_so",
-        sha256 = "85e4b59cfbc8ed391ed50392d489063a67613dcc4e857797322b03a6fd1a2a69",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/function_calling/android_arm64/libjni_fst_constraint_android.so?generation=1744058880905863"],
+        sha256 = "9916be20ff2fc981380d540f4d3f026109ba33ba6f1fa2f6719cd4f3dd8ec0fa",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/function_calling/android_arm64/libjni_fst_constraint_android.so?generation=1744239171675235"],
     )
 
     http_file(
         name = "ai_edge_apis_function_calling_x86_64_libjni_fst_constraint_android_so",
-        sha256 = "9764348fd23f576c301f916d06b2dd60b7d062c04792442d154be101c707c4e4",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/function_calling/x86_64/libjni_fst_constraint_android.so?generation=1744058881061309"],
+        sha256 = "0e2799a5aa4e2854435ac4e4ec852c80049c37a4fc1d2f4e9323f30098d7f397",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/function_calling/x86_64/libjni_fst_constraint_android.so?generation=1744239171945388"],
     )
