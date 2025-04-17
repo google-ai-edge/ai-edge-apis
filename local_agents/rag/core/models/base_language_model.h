@@ -20,7 +20,7 @@
 
 #include "absl/status/status.h"    // from @abseil-cpp
 #include "absl/status/statusor.h"  // from @abseil-cpp
-#include "local_agents/rag/core/protos/language_models.proto.h"  // from @ai_edge_apis
+#include "local_agents/rag/core/protos/language_models.pb.h"  // from @ai_edge_apis
 
 namespace rag {
 namespace core {

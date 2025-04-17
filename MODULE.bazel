@@ -35,8 +35,21 @@ use_repo(non_module_dependencies, "ai_edge_apis_function_calling_x86_64_libjni_g
 use_repo(non_module_dependencies, "ai_edge_apis_function_calling_android_arm64_libjni_gemma_formatter_android_so")
 use_repo(non_module_dependencies, "ai_edge_apis_function_calling_x86_64_libjni_llama_formatter_android_so")
 use_repo(non_module_dependencies, "ai_edge_apis_function_calling_android_arm64_libjni_llama_formatter_android_so")
+use_repo(non_module_dependencies, "ai_edge_apis_function_calling_x86_64_libjni_hammer_formatter_android_so")
+use_repo(non_module_dependencies, "ai_edge_apis_function_calling_android_arm64_libjni_hammer_formatter_android_so")
 use_repo(non_module_dependencies, "ai_edge_apis_function_calling_x86_64_libjni_fst_constraint_android_so")
 use_repo(non_module_dependencies, "ai_edge_apis_function_calling_android_arm64_libjni_fst_constraint_android_so")
+
+http_archive_dependencies = use_extension("//:extensions.bzl", "http_archive_dependencies")
+use_repo(http_archive_dependencies, "rules_antlr")
+use_repo(http_archive_dependencies, "antlr4")
+
+http_jar_dependencies = use_extension("//:extensions.bzl", "http_jar_dependencies")
+use_repo(http_jar_dependencies, "antlr4_tool")
+use_repo(http_jar_dependencies, "javax_json")
+use_repo(http_jar_dependencies, "stringtemplate4")
+use_repo(http_jar_dependencies, "antlr3_runtime")
+use_repo(http_jar_dependencies, "antlr4_runtime")
 
 maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
 maven.install(
