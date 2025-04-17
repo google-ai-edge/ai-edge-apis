@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-load("@ai_edge_apis//local_agents/rag/core/protos:build_config.bzl", "ai_edge_proto_library")
 load("@ai_edge_apis//local_agents/rag/maven:maven_repository.bzl", "java_proto_lite_srcs")
+load("//local_agents/core/proto:build_config.bzl", "ai_edge_proto_library")
 
 package(default_visibility = [
     ":default_visibility",
