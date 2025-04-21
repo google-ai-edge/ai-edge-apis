@@ -200,6 +200,18 @@ EOF
         deps = [source_library] + native_libraries,
     )
 
+    # Rename the native libraries to start with "lib"
+    rename_so_lib_script = """
+find jni -name "*.so" -print0 | while IFS= read -r file; do
+  dirname=$$(dirname "$$file")
+  filename=$$(basename "$$file")
+  prefix="$${filename%lib*}"
+  new_filename="$${filename#"$$prefix"}"
+  mv "$$file" "$${dirname}/$${new_filename}"
+  echo "Renamed '$$filename' to '$$new_filename'"
+done
+"""
+
     native.genrule(
         name = name,
         srcs = [source_library + ".aar", name + "_dummy_app_unsigned.apk"],
@@ -212,8 +224,9 @@ origdir=$$PWD
 cd $$(mktemp -d)
 unzip $$origdir/$(location :{}_dummy_app_unsigned.apk) *
 cp -r lib jni
+{}
 zip -r $$origdir/$(location :{}.aar) jni/*/*.so
-""".format(source_library, name, name, name, name),
+""".format(source_library, name, name, name, rename_so_lib_script, name),
     )
 
 def java_proto_lite_srcs(name, jar, package_root, proto_files):

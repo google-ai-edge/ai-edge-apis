@@ -20,11 +20,6 @@ package(default_visibility = [
     "//visibility:public",
 ])
 
-config_setting(
-    name = "android_arm64",
-    values = {"cpu": "arm64-v8a"},
-)
-
 ai_edge_files(
     srcs = [
         "rag_pipeline_android_arm64_libgecko_embedding_model_jni.so",
@@ -65,7 +60,7 @@ android_library(
 cc_library(
     name = "libgecko_embedding_model_jni_lib",
     srcs = select({
-        ":android_arm64": [":rag_pipeline_android_arm64_libgecko_embedding_model_jni.so"],
+        "//:android_arm64": [":rag_pipeline_android_arm64_libgecko_embedding_model_jni.so"],
         "//conditions:default": [":rag_pipeline_x86_64_libgecko_embedding_model_jni.so"],
     }),
     alwayslink = 1,
@@ -74,7 +69,7 @@ cc_library(
 cc_library(
     name = "libsqlite_vector_store_jni_lib",
     srcs = select({
-        ":android_arm64": [":rag_pipeline_android_arm64_libsqlite_vector_store_jni.so"],
+        "//:android_arm64": [":rag_pipeline_android_arm64_libsqlite_vector_store_jni.so"],
         "//conditions:default": [":rag_pipeline_x86_64_libsqlite_vector_store_jni.so"],
     }),
     alwayslink = 1,
@@ -83,7 +78,7 @@ cc_library(
 cc_library(
     name = "libtext_chunker_jni_lib",
     srcs = select({
-        ":android_arm64": [":rag_pipeline_android_arm64_libtext_chunker_jni.so"],
+        "//:android_arm64": [":rag_pipeline_android_arm64_libtext_chunker_jni.so"],
         "//conditions:default": [":rag_pipeline_x86_64_libtext_chunker_jni.so"],
     }),
     alwayslink = 1,
@@ -99,8 +94,10 @@ android_jni_aar(
     source_library = ":rag_lib",
 )
 
-# Should be build as such::
-# bazel build --android_platforms=//buildenv/platforms/android:arm64-v8a -c opt --copt=-Os --linkopt -s --strip always //local_agents/rag/java/com/google/ai/edge/localagents/rag:rag_maven_artifact --define MAVEN_ARTIFACT_LAST_UPDATED=$(date "+%Y%m%d000000")
+# Should be build as such:
+# bazel build --android_platforms=//:arm64-v8a -c opt --copt=-Os --linkopt -s --strip always \
+#   //local_agents/rag/java/com/google/ai/edge/localagents/rag:rag_maven_artifact \
+#   --define MAVEN_ARTIFACT_LAST_UPDATED=$(date "+%Y%m%d000000")
 maven_artifact(
     name = "rag_maven_artifact",
     src = "rag_jni_aar.aar",
