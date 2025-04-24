@@ -202,13 +202,34 @@ EOF
 
     # Rename the native libraries to start with "lib"
     rename_so_lib_script = """
-find jni -name "*.so" -print0 | while IFS= read -r file; do
+find jni -name "*.so" | while IFS= read -r file; do
   dirname=$$(dirname "$$file")
   filename=$$(basename "$$file")
   prefix="$${filename%lib*}"
   new_filename="$${filename#"$$prefix"}"
-  mv "$$file" "$${dirname}/$${new_filename}"
-  echo "Renamed '$$filename' to '$$new_filename'"
+  if [ "$$filename" != "$$new_filename" ]; then
+    mv "$$file" "$$dirname/$$new_filename"
+    echo "Renamed '$$filename' to '$$new_filename'"
+  fi
+done
+"""
+
+    # Move the jni directory to current path
+    # A hacky way to get the ABI from the jni directory name.
+    mv_jni_dir_script = """
+abi=$$(find jni -mindepth 1 -maxdepth 1 -name "*" -type d -print -quit)
+if [ -z "$$abi" ]; then
+  echo "No ABI subdirectory found directly under jni. Use arm64-v8a by default."
+  abi=jni/arm64-v8a
+fi
+
+find . -name "jni" -type d | while IFS= read -r found_jni_dir; do
+  # Skip the current jni directory
+  if [ "$$found_jni_dir" != "./jni" ]; then
+    echo "Merging contents of '$$found_jni_dir' into './jni'..."
+    find "$$found_jni_dir" -name "*.so" -type f -exec cp {} "$$abi" \\;
+    echo "Successfully merged '$$found_jni_dir'."
+  fi
 done
 """
 
@@ -225,8 +246,9 @@ cd $$(mktemp -d)
 unzip $$origdir/$(location :{}_dummy_app_unsigned.apk) *
 cp -r lib jni
 {}
+{}
 zip -r $$origdir/$(location :{}.aar) jni/*/*.so
-""".format(source_library, name, name, name, rename_so_lib_script, name),
+""".format(source_library, name, name, name, mv_jni_dir_script, rename_so_lib_script, name),
     )
 
 def java_proto_lite_srcs(name, jar, package_root, proto_files):
