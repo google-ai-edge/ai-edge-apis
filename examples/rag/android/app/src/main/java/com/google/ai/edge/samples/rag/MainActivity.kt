@@ -1,5 +1,7 @@
 package com.google.ai.edge.samples.rag
 
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,7 +21,9 @@ class MainActivity : ComponentActivity() {
     setContent {
       Surface(modifier = Modifier.fillMaxSize()) { MaterialTheme { NavView(chatViewModel) } }
     }
-    chatViewModel.memorizeChunks("sample_context.txt")
+    lifecycleScope.launch {
+      chatViewModel.memorizeChunks("sample_context.txt")
+    }
   }
 
   private companion object {

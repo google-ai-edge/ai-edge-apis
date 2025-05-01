@@ -22,10 +22,6 @@ class ChatViewModel constructor(private val application: Application) :
     private val executorService = Executors.newSingleThreadExecutor()
     private val backgroundExecutor: Executor = Executors.newSingleThreadExecutor()
 
-    fun memorizeChunks(filename: String) {
-        ragPipeline.memorizeChunks(application.getApplicationContext(), filename)
-    }
-
     @SuppressWarnings("FutureReturnValueIgnored")
     fun requestResponse(prompt: String) {
         appendMessage(MessageOwner.User, prompt)
@@ -36,14 +32,15 @@ class ChatViewModel constructor(private val application: Application) :
         withContext(backgroundExecutor.asCoroutineDispatcher()) {
             ragPipeline.generateResponse(
                 prompt,
-                object : AsyncProgressListener<LanguageModelResponse> {
-                    override fun run(response: LanguageModelResponse, done: Boolean) {
-                        updateLastMessage(MessageOwner.Model, response.text)
-                    }
-                },
-            )
-
+            ) { response, done -> updateLastMessage(MessageOwner.Model, response.text) }
         }
+
+    suspend fun memorizeChunks(filename: String) {
+        withContext(backgroundExecutor.asCoroutineDispatcher()) {
+            ragPipeline.memorizeChunks(application.applicationContext, filename)
+        }
+    }
+
 
     private fun appendMessage(role: MessageOwner, message: String) {
         messages.add(MessageData(role, message))
