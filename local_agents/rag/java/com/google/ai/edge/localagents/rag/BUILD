@@ -38,6 +38,7 @@ android_library(
         "@ai_edge_apis//local_agents/rag/core/protos:memory_java_proto_lite_srcs",
         "@ai_edge_apis//local_agents/rag/core/protos:vector_stores_java_proto_lite_srcs",
         "@ai_edge_apis//local_agents/rag/java/com/google/ai/edge/localagents/rag/chains:maven_srcs",
+        "@ai_edge_apis//local_agents/rag/java/com/google/ai/edge/localagents/rag/chunking:maven_srcs",
         "@ai_edge_apis//local_agents/rag/java/com/google/ai/edge/localagents/rag/memory:maven_srcs",
         "@ai_edge_apis//local_agents/rag/java/com/google/ai/edge/localagents/rag/models:maven_srcs",
         "@ai_edge_apis//local_agents/rag/java/com/google/ai/edge/localagents/rag/prompt:maven_srcs",
@@ -110,7 +111,7 @@ maven_artifact(
     ],
     artifact_id = "localagents-rag",
     artifact_optional_deps = [
-        "com.google.mediapipe:tasks-genai:0.10.22",
+        "com.google.mediapipe:tasks-genai:0.10.23",
     ],
     group_id = "com.google.ai.edge.localagents",
     inception_year = "2024",
@@ -118,5 +119,5 @@ maven_artifact(
     lib_description = "The Google AI Edge RAG library.",
     lib_name = "Google AI Edge RAG",
     lib_url = "https://github.com/google-ai-edge/rag",
-    version = "0.1.0",
+    version = "0.1.1",
 )

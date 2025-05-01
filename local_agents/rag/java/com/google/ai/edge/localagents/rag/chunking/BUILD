@@ -25,9 +25,14 @@ package_group(
     ],
 )
 
+filegroup(
+    name = "maven_srcs",
+    srcs = [
+        "TextChunker.java",
+    ],
+)
+
 android_library(
     name = "text_chunker",
     srcs = ["TextChunker.java"],
-    deps = [
-    ],
 )
