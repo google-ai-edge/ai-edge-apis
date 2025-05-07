@@ -107,15 +107,16 @@ class RagPipeline(private val application: Application) {
     if (sb.isNotEmpty()) {
       texts.add(sb.toString())
     }
-    if (texts.isNotEmpty()) {
-      memorize(texts)
-    }
     reader.close()
+    if (texts.isNotEmpty()) {
+      return memorize(texts)
+    }
   }
 
   /** Stores input texts in the semantic text memory. */
   private fun memorize(facts: List<String>) {
-    config.semanticMemory.getOrNull()?.recordBatchedMemoryItems(ImmutableList.copyOf(facts))
+    val future = config.semanticMemory.getOrNull()?.recordBatchedMemoryItems(ImmutableList.copyOf(facts))
+    future?.get()
   }
 
   /** Generates the response from the LLM. */
