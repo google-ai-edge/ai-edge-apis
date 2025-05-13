@@ -103,8 +103,6 @@ maven_artifact(
     name = "rag_maven_artifact",
     src = "rag_jni_aar.aar",
     artifact_deps = [
-        "com.google.auto.value:auto-value-annotations:1.11.0",
-        "com.google.auto.value:auto-value:1.11.0",
         "com.google.guava:guava:33.3.1-android",
         "com.squareup.okhttp3:okhttp:4.12.0",
         "org.json:json:20250107",
@@ -118,6 +116,6 @@ maven_artifact(
     last_updated = "$(MAVEN_ARTIFACT_LAST_UPDATED)",
     lib_description = "The Google AI Edge RAG library.",
     lib_name = "Google AI Edge RAG",
-    lib_url = "https://github.com/google-ai-edge/rag",
+    lib_url = "https://github.com/google-ai-edge/ai-edge-apis",
     version = "0.1.1",
 )
