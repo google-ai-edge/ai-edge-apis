@@ -61,6 +61,9 @@ public final class SqliteVectorStore implements VectorStore<String> {
   /**
    * Creates a new persisted vector store with a default table format.
    *
+   * <p>Note: The database file path must be the absolute path to your application's private
+   * internal storage directory.
+   *
    * @param numEmbeddingDimensions The number of embedding dimensions.
    * @param databasePath The path to the persisted database file.
    */
