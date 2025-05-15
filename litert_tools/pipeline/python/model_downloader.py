@@ -26,7 +26,7 @@ class ModelDownloader(abc.ABC):
   """Base class for model downloader."""
 
   _DEFAULT_CACHE_DIR = os.path.join(
-      os.environ["HOME"], ".cache", "litertlm_tools"
+      os.environ["HOME"], ".cache", "litert_tools"
   )
 
   def __init__(

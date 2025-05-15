@@ -33,7 +33,7 @@ py_library(
 )
 
 py_library(
-    name = "litertlm_lib",
+    name = "litert_lib",
     srcs = [
         "__init__.py",
         "version.py",
