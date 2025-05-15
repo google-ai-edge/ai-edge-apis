@@ -1,0 +1,233 @@
+syntax = "proto3";
+
+package odml.genai_modules.core.proto;
+
+import "google/protobuf/struct.proto";
+
+option java_multiple_files = true;
+option java_package = "com.google.ai.edge.localagents.core.proto";
+option java_outer_classname = "ContentProto";
+
+// The base structured datatype containing multi-part content of a message.
+//
+// A `Content` includes a `role` field designating the producer of the `Content`
+// and a `parts` field containing multi-part data that contains the content of
+// the message turn.
+message Content {
+  // Ordered `Parts` that constitute a single message. Parts may have different
+  // MIME types.
+  repeated Part parts = 1;
+
+  // The producer of the content. Must be either 'user' or 'model'.
+  //
+  // Useful to set for multi-turn conversations, otherwise can be left blank
+  // or unset.
+  string role = 2;
+}
+
+// A datatype containing media that is part of a multi-part `Content` message.
+//
+// A `Part` consists of data which has an associated datatype. A `Part` can only
+// contain one of the accepted types in `Part.data`.
+//
+// A `Part` must have a fixed IANA MIME type identifying the type and subtype
+// of the media if the `inline_data` field is filled with raw bytes.
+message Part {
+  reserved 3, 6, 7, 8, 9, 10, 11;
+
+  oneof data {
+    // Inline text.
+    string text = 2;
+
+    // A predicted `FunctionCall` returned from the model that contains
+    // a string representing the `FunctionDeclaration.name` with the
+    // arguments and their values.
+    FunctionCall function_call = 4;
+
+    // The result output of a `FunctionCall` that contains a string
+    // representing the `FunctionDeclaration.name` and a structured JSON
+    // object containing any output from the function is used as context to
+    // the model.
+    FunctionResponse function_response = 5;
+  }
+}
+
+// Tool details that the model may use to generate response.
+//
+// A `Tool` is a piece of code that enables the system to interact with
+// external systems to perform an action, or set of actions, outside of
+// knowledge and scope of the model.
+message Tool {
+  reserved 2, 3, 4, 5;
+
+  // A list of `FunctionDeclarations` available to the model that can be used
+  // for function calling.
+  //
+  // The model or system does not execute the function. Instead the defined
+  // function may be returned as a [FunctionCall][Part.function_call]
+  // with arguments to the client side for execution. The model may decide to
+  // call a subset of these functions by populating
+  // [FunctionCall][Part.function_call] in the response. The next
+  // conversation turn may contain a
+  // [FunctionResponse][Part.function_response]
+  // with the [Content.role][] "function" generation context for the next model
+  // turn.
+  repeated FunctionDeclaration function_declarations = 1;
+}
+
+// Structured representation of a function declaration as defined by the
+// [OpenAPI 3.03 specification](https://spec.openapis.org/oas/v3.0.3). Included
+// in this declaration are the function name and parameters. This
+// FunctionDeclaration is a representation of a block of code that can be used
+// as a `Tool` by the model and executed by the client.
+message FunctionDeclaration {
+  reserved 5;
+
+  // The name of the function.
+  // Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum
+  // length of 63.
+  string name = 1;
+
+  // A brief description of the function.
+  string description = 2;
+
+  // Describes the parameters to this function. Reflects the Open API 3.03
+  // Parameter Object string Key: the name of the parameter. Parameter names are
+  // case sensitive. Schema Value: the Schema defining the type used for the
+  // parameter.
+  optional Schema parameters = 3;
+
+  // Describes the output from this function in JSON Schema format. Reflects the
+  // Open API 3.03 Response Object. The Schema defines the type used for the
+  // response value of the function.
+  optional Schema response = 4;
+}
+
+// A predicted `FunctionCall` returned from the model that contains
+// a string representing the `FunctionDeclaration.name` with the
+// arguments and their values.
+message FunctionCall {
+  reserved 3;
+
+  // The name of the function to call.
+  // Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum
+  // length of 63.
+  string name = 1;
+
+  // The function parameters and values in JSON object format.
+  optional google.protobuf.Struct args = 2;
+}
+
+// The result output from a `FunctionCall` that contains a string
+// representing the `FunctionDeclaration.name` and a structured JSON
+// object containing any output from the function is used as context to
+// the model. This should contain the result of a`FunctionCall` made
+// based on model prediction.
+message FunctionResponse {
+  reserved 3, 4, 5;
+
+  // The name of the function to call.
+  // Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum
+  // length of 63.
+  string name = 1;
+
+  // The function response in JSON object format.
+  google.protobuf.Struct response = 2;
+}
+
+// (-- Next ID: 25 --)
+// The `Schema` object allows the definition of input and output data types.
+// These types can be objects, but also primitives and arrays.
+// Represents a select subset of an [OpenAPI 3.0 schema
+// object](https://spec.openapis.org/oas/v3.0.3#schema).
+message Schema {
+  reserved 9, 10, 13, 14, 15, 16, 17, 19, 20;
+
+  // Data type.
+  Type type = 1;
+
+  // The format of the data. This is used only for primitive datatypes.
+  // Supported formats:
+  //  for NUMBER type: float, double
+  //  for INTEGER type: int32, int64
+  //  for STRING type: enum, date-time
+  string format = 2;
+
+  // The title of the schema.
+  string title = 24;
+
+  // A brief description of the parameter. This could contain examples of use.
+  // Parameter description may be formatted as Markdown.
+  string description = 3;
+
+  // Indicates if the value may be null.
+  bool nullable = 4;
+
+  // Possible values of the element of Type.STRING with enum format.
+  // For example we can define an Enum Direction as :
+  // {type:STRING, format:enum, enum:["EAST", NORTH", "SOUTH", "WEST"]}
+  repeated string enum = 5;
+
+  // Schema of the elements of Type.ARRAY.
+  optional Schema items = 6;
+
+  // Maximum number of the elements for Type.ARRAY.
+  int64 max_items = 21;
+
+  // Minimum number of the elements for Type.ARRAY.
+  int64 min_items = 22;
+
+  // Properties of Type.OBJECT.
+  map<string, Schema> properties = 7;
+
+  // Required properties of Type.OBJECT.
+  repeated string required = 8;
+
+  // SCHEMA FIELDS FOR TYPE INTEGER and NUMBER
+  // Minimum value of the Type.INTEGER and Type.NUMBER
+  optional double minimum = 11;
+
+  // Maximum value of the Type.INTEGER and Type.NUMBER
+  optional double maximum = 12;
+
+  // The value should be validated against any (one or more) of the subschemas
+  // in the list.
+  repeated Schema any_of = 18;
+
+  // The order of the properties.
+  // Not a standard field in open api spec. Used to determine the order of the
+  // properties in the response.
+  // (-- This is necessary as protos do not preserve the order in which the
+  // properties are defined in the request. --)
+  repeated string property_ordering = 23;
+}
+
+// Type contains the list of OpenAPI data types as defined by
+// https://spec.openapis.org/oas/v3.0.3#data-types
+enum Type {
+  // Not specified, should not be used.
+  TYPE_UNSPECIFIED = 0;
+
+  // String type.
+  STRING = 1;
+
+  // Number type.
+  NUMBER = 2;
+
+  // Integer type.
+  INTEGER = 3;
+
+  // Boolean type.
+  BOOLEAN = 4;
+
+  // Array type.
+  ARRAY = 5;
+
+  // Object type.
+  OBJECT = 6;
+
+  // Null type.
+  // HACK: We use this to handle optional parameters, which users are specifying
+  // optional things by using a OneOf with a second type of NULL.
+  NULL = 7;
+}

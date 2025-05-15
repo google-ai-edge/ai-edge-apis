@@ -1,0 +1,69 @@
+// Proto file for Generative Language API GenerativeService (v1main)
+syntax = "proto3";
+
+package odml.genai_modules.core.proto;
+
+import "local_agents/core/proto/content.proto";
+
+option java_multiple_files = true;
+option java_package = "com.google.ai.edge.localagents.core.proto";
+option java_outer_classname = "GenerativeServiceProto";
+
+// Request to generate a completion from the model.
+message GenerateContentRequest {
+  reserved 3, 4, 6, 7, 9, 10;
+
+  // The name of the `Model` to use for generating the completion.
+  //
+  // Format: `models/{model}`.
+  string model = 1;
+
+  // Developer set [system
+  // instruction(s)](https://ai.google.dev/gemini-api/docs/system-instructions).
+  // Currently, text only.
+  optional Content system_instruction = 8;
+
+  // The content of the current conversation with the model.
+  //
+  // For single-turn queries, this is a single instance. For multi-turn queries
+  // like [chat](https://ai.google.dev/gemini-api/docs/text-generation#chat),
+  // this is a repeated field that contains the conversation history and the
+  // latest request.
+  repeated Content contents = 2;
+
+  // A list of `Tools` the `Model` may use to generate the next response.
+  //
+  // A `Tool` is a piece of code that enables the system to interact with
+  // external systems to perform an action, or set of actions, outside of
+  // knowledge and scope of the `Model`. Supported `Tool`s are `Function` and
+  // `code_execution`. Refer to the [Function
+  // calling](https://ai.google.dev/gemini-api/docs/function-calling) and the
+  // [Code execution](https://ai.google.dev/gemini-api/docs/code-execution)
+  // guides to learn more.
+  repeated Tool tools = 5;
+}
+
+// Response from the model supporting multiple candidate responses.
+//
+// Safety ratings and content filtering are reported for both
+// prompt in `GenerateContentResponse.prompt_feedback` and for each candidate
+// in `finish_reason` and in `safety_ratings`. The API:
+//  - Returns either all requested candidates or none of them
+//  - Returns no candidates at all only if there was something wrong with the
+//    prompt (check `prompt_feedback`)
+//  - Reports feedback on each candidate in `finish_reason` and
+//    `safety_ratings`.
+message GenerateContentResponse {
+  reserved 2, 3, 4;
+
+  // Candidate responses from the model.
+  repeated Candidate candidates = 1;
+}
+
+// A response candidate generated from the model.
+message Candidate {
+  reserved 2, 3, 4, 5, 6, 7, 8, 9, 10, 11;
+
+  // Generated content returned from the model.
+  Content content = 1;
+}

@@ -1,0 +1,6 @@
+absl-py
+google-ai-generativelanguage
+google-generativeai
+protobuf
+proto-plus
+tensorflow
