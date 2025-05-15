@@ -108,12 +108,12 @@ maven_artifact(
     ],
     artifact_id = "localagents-rag",
     artifact_optional_deps = [
-        "com.google.mediapipe:tasks-genai:0.10.23",
+        "com.google.mediapipe:tasks-genai:(,)",
     ],
     group_id = "com.google.ai.edge.localagents",
     inception_year = "2024",
     lib_description = "The Google AI Edge RAG library.",
     lib_name = "Google AI Edge RAG",
     lib_url = "https://github.com/google-ai-edge/ai-edge-apis",
-    version = "0.1.1",
+    version = "0.2.0",
 )
