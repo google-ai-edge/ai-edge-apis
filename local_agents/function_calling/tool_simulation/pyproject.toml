@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "tool-simulation"
+name = "ai-edge-tool-simulation"
 version = "0.1.0"
 description = "Library for simulating tool use, function calling, and data generation/validation for language models."
 readme = "README.md"

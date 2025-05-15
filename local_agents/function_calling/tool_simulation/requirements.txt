@@ -1,6 +1,5 @@
-absl-py
-google-ai-generativelanguage
-google-generativeai
-protobuf
-proto-plus
-tensorflow
+absl_py==2.2.2
+google-genai==1.15.0
+protobuf==6.31.0
+proto-plus==1.26.1
+tensorflow==2.19.0
