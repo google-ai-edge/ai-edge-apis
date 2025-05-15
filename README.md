@@ -17,5 +17,5 @@ Java.
 You can find the SDK on [GitHub](https://github.com/google-ai-edge/ai-edge-apis/tree/main/local_agents/rag)
 or follow our [public documentation](https://ai.google.dev/edge/mediapipe/solutions/genai/rag/android)
 to install directly from Maven. We have also published a
-[sample app](https://github.com/google-ai-edge/ai-edge-apis/tree/main/examples/local_agents/rag)
+[sample app](https://github.com/google-ai-edge/ai-edge-apis/tree/main/examples/rag)
 in this repository.

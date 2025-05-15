@@ -28,7 +28,7 @@ on the `Chain` interface [Java API](https://github.com/google-ai-edge/ai-edge-ap
 
 ## Demos
 
-Try our [sample app](https://github.com/google-ai-edge/ai-edge-apis/tree/main/examples/local_agents/rag)
+Try our [sample app](https://github.com/google-ai-edge/ai-edge-apis/tree/main/examples/rag)
 for a quick demo.
 
 ## Guide
