@@ -20,9 +20,9 @@ import logging
 import sys
 from typing import Optional, Sequence
 from ai_edge_litert import interpreter as interpreter_lib
-from litertlm_tools.pipeline import model_downloader as model_downloader_lib
-from litertlm_tools.pipeline import task_file_processor as task_file_processor_lib
-from litertlm_tools.pipeline import tokenizer as tokenizer_lib
+from litert_tools.pipeline import model_downloader as model_downloader_lib
+from litert_tools.pipeline import task_file_processor as task_file_processor_lib
+from litert_tools.pipeline import tokenizer as tokenizer_lib
 import numpy as np
 import sentencepiece as sp
 import transformers

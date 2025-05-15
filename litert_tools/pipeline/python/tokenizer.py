@@ -17,7 +17,7 @@
 
 import logging
 from typing import Any, Sequence, Union
-from litertlm_tools.pipeline import prompt_template as prompt_template_lib
+from litert_tools.pipeline import prompt_template as prompt_template_lib
 import sentencepiece as sp
 
 

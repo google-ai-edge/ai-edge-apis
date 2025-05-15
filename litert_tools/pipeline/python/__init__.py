@@ -13,5 +13,5 @@
 # limitations under the License.
 # ==============================================================================
 
-from litertlm_tools import pipeline
-from litertlm_tools.version import __version__
+from litert_tools import pipeline
+from litert_tools.version import __version__

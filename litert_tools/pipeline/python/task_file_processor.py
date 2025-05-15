@@ -19,8 +19,8 @@ import logging
 import os
 import zipfile
 
-from litertlm_tools.pipeline import llm_parameters_pb2
-from litertlm_tools.pipeline import prompt_template
+from litert_tools.pipeline import llm_parameters_pb2
+from litert_tools.pipeline import prompt_template
 
 
 class TaskFileProcessor:
