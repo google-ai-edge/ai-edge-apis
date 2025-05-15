@@ -12,7 +12,7 @@ The tool simulation library is available as a Python package. You can install
 the library using pip:
 
 ```bash
-pip install . #[TODO -- name of the package]
+pip install ai-edge-tool-simulation
 ```
 
 Or, if installing directly from the source directory:
