@@ -60,7 +60,6 @@ _metadata_tmpl = "\n".join([
     "    <versions>",
     "      <version>{version}</version>",
     "    </versions>",
-    "  <lastUpdated>{last_updated}</lastUpdated>",
     "  </versioning>",
     "</metadata>",
     "",
@@ -121,7 +120,6 @@ def _create_metadata_string(ctx):
         group_id = ctx.attr.group_id,
         artifact_id = ctx.attr.artifact_id,
         version = ctx.attr.version,
-        last_updated = ctx.attr.last_updated,
     )
 
 def _maven_artifact_impl(ctx):
@@ -286,7 +284,6 @@ maven_artifact = rule(
         "group_id": attr.string(mandatory = True),
         "artifact_id": attr.string(mandatory = True),
         "version": attr.string(mandatory = True),
-        "last_updated": attr.string(mandatory = True),
         "artifact_deps": attr.string_list(),
         "artifact_optional_deps": attr.string_list(),
         "lib_name": attr.string(default = ""),

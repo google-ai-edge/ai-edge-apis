@@ -98,7 +98,6 @@ android_jni_aar(
 # Should be build as such:
 # bazel build --android_platforms=//:arm64-v8a -c opt --copt=-Os --linkopt -s --strip always \
 #   //local_agents/rag/java/com/google/ai/edge/localagents/rag:rag_maven_artifact \
-#   --define MAVEN_ARTIFACT_LAST_UPDATED=$(date "+%Y%m%d000000")
 maven_artifact(
     name = "rag_maven_artifact",
     src = "rag_jni_aar.aar",
@@ -113,7 +112,6 @@ maven_artifact(
     ],
     group_id = "com.google.ai.edge.localagents",
     inception_year = "2024",
-    last_updated = "$(MAVEN_ARTIFACT_LAST_UPDATED)",
     lib_description = "The Google AI Edge RAG library.",
     lib_name = "Google AI Edge RAG",
     lib_url = "https://github.com/google-ai-edge/ai-edge-apis",
