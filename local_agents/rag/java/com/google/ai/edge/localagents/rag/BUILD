@@ -96,7 +96,7 @@ android_jni_aar(
 )
 
 # Should be build as such:
-# bazel build --android_platforms=//:arm64-v8a -c opt --copt=-Os --linkopt -s --strip always \
+# blaze --blazerc=/dev/null build --android_platforms=//:arm64-v8a -c opt --copt=-Os --linkopt -s --strip always \
 #   //local_agents/rag/java/com/google/ai/edge/localagents/rag:rag_maven_artifact \
 maven_artifact(
     name = "rag_maven_artifact",
