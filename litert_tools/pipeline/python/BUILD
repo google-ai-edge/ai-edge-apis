@@ -36,7 +36,6 @@ py_library(
     name = "litert_lib",
     srcs = [
         "__init__.py",
-        "version.py",
     ],
     deps = [
         ":pipeline",
