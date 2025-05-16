@@ -30,7 +30,7 @@ Add these dependencies to the `build.gradle` file of your Android application:
 ```none
 dependencies {
     implementation 'com.google.mediapipe:tasks-genai:0.10.23'
-    implementation 'com.google.ai.edge.localagents:localagents-fc:0.1.0'
+    implementation 'com.google.ai.edge.localagents:localagents-fc:0.1.0-alpha'
 }
 ```
 
