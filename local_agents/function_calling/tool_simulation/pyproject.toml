@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ai-edge-tool-simulation"
-version = "0.1.0.post1"
+version = "0.1.1"
 description = "Library for simulating tool use, function calling, and data generation/validation for language models."
 readme = "README_PYPI.md"
 license = "Apache-2.0"
