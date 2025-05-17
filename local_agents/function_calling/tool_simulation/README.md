@@ -515,7 +515,7 @@ components to generate conversational data for an API. We'll cover defining the
 API, simulating its behavior, generating initial queries, running conversation
 simulations, and validating the results.
 
-## Goal
+### Goal
 
 In the example below we will simulate conversations where a user interacts with
 an agent that manages user accounts. We will look at generating different tasks
@@ -528,7 +528,7 @@ defined. This tutorial is an in-depth walkthrough through some of the main
 components. After completing **Step 4** below, you can instead refer to
 `tool_simulation/pipelines`
 
-## Step 1: Define Your API Schema
+### Step 1: Define Your API Schema
 
 First, define the structure of all the functions your API exposes using
 `google.genai.Tool` and `google.genai.FunctionDeclaration`. This schema
@@ -583,7 +583,7 @@ import tool_simulation.core.tool2str as tool2str
 print(tool2str.tool2str(tool=my_api))
 ```
 
-## Step 2: Define Your Parser Function
+### Step 2: Define Your Parser Function
 
 The tool simulator needs a way to convert the function calls emitted by
 the model to a structured form. To do this conversion, we define a simple parser
@@ -646,7 +646,7 @@ print(parse_output("Hello World").forward)
 # Hello World
 ~~~
 
-## Step 3: Define API Backend
+### Step 3: Define API Backend
 
 In this step we define a mock backend for our API. The purpose is to provide
 replies to the function calling model. While we are using a relatively simple
@@ -709,7 +709,7 @@ print(simulator.reply(parse_output("```tool_code\nget_user_profile(user_id=\"bob
 # {"retrieved_user_profiles": [{"name": "Bob", "email": "bob@example.com", "status": "active"}]}
 ~~~
 
-## Step 4: Configure Models and Prompt Builders for Simulation
+### Step 4: Configure Models and Prompt Builders for Simulation
 
 To set up our simulation we need `PromptBuilder` objects for the function
 calling model (`DataGenerationPromptBuilder`) and the replier model
@@ -791,7 +791,7 @@ replier_model_instance = aistudio_backend.AIStudioModel(
 )
 ```
 
-## Step 5: Run a Simulation Episode
+### Step 5: Run a Simulation Episode
 
 We are now ready to run a simulation episode. This can be done with the
 `run_function_calling_episode` utlity. Optionally, you can also use some of the
@@ -810,13 +810,13 @@ result = function_calling_episode.run_function_calling_episode(
 print(result.get_prompt())
 ```
 
-## Step 6: Scaling to Multiple Queries
+### Step 6: Scaling to Multiple Queries
 
 The example above is meant to guide through the internals of how a data
 generation pipeline can be built. The tool simulation library comes with a set
 of default pipelines under `tool_simulation/pipelines` that can be used.
 
-## Step 7: Running Trained Model With the On-Device FC SDK
+### Step 7: Running Trained Model With the On-Device FC SDK
 
 The generated datasets can be exported in the TF Example and HuggingFace JSON
 formats depending on your training setup. After training, export your checkpoint
@@ -829,3 +829,6 @@ For advanced use-cases where you are using a model not natively supported by the
 FC SDK, you can specify your own `ModelFormatter`.
 To adapt a model in the `tool_simulation` library to your custom format, you can
 use the `core/base_prompt_builder` classes.
+
+## Advanced Usage
+Check out the examples under `demo` for advanced end-to-end use.
