@@ -32,8 +32,8 @@ const val TAG = "FormViewModel"
 
 class FormViewModel : ViewModel() {
 
-    private lateinit var chatSession: ChatSession
-    val generativeModel by lazy {createGenerativeModel()}
+    private var chatSession: ChatSession? = null
+    val generativeModel by lazy { createGenerativeModel() }
 
     // Observable state to indicate that the initial hint prompt has been shown
     private val _hasShownPrompt = MutableStateFlow(false)
@@ -133,7 +133,10 @@ class FormViewModel : ViewModel() {
             _isProcessing.value = true
             Log.i(TAG, "Model processing started")
             try {
-                val response = chatSession.sendMessage(spokenText)
+                if (chatSession == null) {
+                    chatSession = generativeModel.startChat()
+                }
+                val response = chatSession!!.sendMessage(spokenText)
                 Log.d(TAG, "Hammer Response: $response") // Log response
 
                 response.getCandidates(0).content.partsList?.let {
@@ -324,7 +327,6 @@ class FormViewModel : ViewModel() {
             systemInstruction,
             listOf(Tools.medicalFormTools).toMutableList()
         )
-        chatSession = model.startChat()
         return model
     }
 }
