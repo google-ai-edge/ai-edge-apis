@@ -50,7 +50,7 @@ message PromptTemplate {
 //
 message PromptTemplates {
   // The template for user role.
-  optional PromptTemplate user_template = 1;
+  PromptTemplate user_template = 1;
 
   reserved 2, 3;
 }
@@ -76,5 +76,5 @@ message LlmParameters {
   reserved 9, 10, 11, 12, 13, 14, 15, 16;
 
   // Prompt templates for different roles.
-  optional PromptTemplates prompt_templates = 17;
+  PromptTemplates prompt_templates = 17;
 }
