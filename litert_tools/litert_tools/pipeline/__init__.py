@@ -13,4 +13,4 @@
 # limitations under the License.
 # ==============================================================================
 
-from litert_tools import pipeline
+from litert_tools.pipeline import pipeline
