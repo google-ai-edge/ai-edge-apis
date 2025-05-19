@@ -15,4 +15,4 @@
 
 """Developer-facing tooling for the execution and configuration of LiteRT language models."""
 
-from litert_tools import pipeline
+from litert_tools.pipeline import pipeline
