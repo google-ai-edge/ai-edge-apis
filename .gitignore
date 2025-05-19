@@ -1,13 +1,3 @@
 bazel-*
 .configure.bazelrc
 .user.bazelrc
-
-# Gradle files
-examples/**/.gradle/
-examples/**/.idea/
-examples/**/.kotlin/
-examples/**/build/
-
-# Local configuration file (sdk path, etc)
-examples/**/local.properties
-

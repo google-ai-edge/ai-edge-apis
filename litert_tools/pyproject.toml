@@ -1,25 +1,36 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=61.0", "setuptools-protobuf"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "litert-tools"
+name = "litert_tools"
 version = "0.0.1"
 description = "Developer-facing tooling for the execution and configuration of LiteRT language models."
 readme = "README.md"
-license = {text = "Apache-2.0"}
+license = "Apache-2.0"
 requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python",
 ]
 dependencies = [
-    "ai-edge-litert",
-    "numpy",
-    "transformers",
-    "huggingface_hub",
-    "sentencepiece",
-    "jinja2"
+    "ai-edge-litert==1.2.0",
+    "numpy==2.2.5",
+    "transformers==4.51.3",
+    "huggingface_hub==0.31.2",
+    "sentencepiece==0.2.0",
 ]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"litert_tools" = ["**/*.proto"]
+
+[tool.setuptools-protobuf]
+protobufs = ["./litert_tools/pipeline/llm_parameters.proto"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["litert_tools*"]
