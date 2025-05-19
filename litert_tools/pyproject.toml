@@ -16,7 +16,7 @@ classifiers = [
 ]
 dependencies = [
     "ai-edge-litert==1.2.0",
-    "numpy==2.2.5",
+    "numpy==1.26.4",
     "transformers==4.51.3",
     "huggingface_hub==0.31.2",
     "sentencepiece==0.2.0",
