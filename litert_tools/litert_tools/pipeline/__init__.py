@@ -14,4 +14,3 @@
 # ==============================================================================
 
 from litert_tools import pipeline
-from litert_tools.version import __version__
