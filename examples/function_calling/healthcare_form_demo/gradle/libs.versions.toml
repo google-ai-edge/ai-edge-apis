@@ -13,8 +13,8 @@ kotlinx_serialization_json_version = "1.7.3"
 
 lottie_compose_version = "4.0.0"
 
-tasksGenai = "0.10.23"
-localagentsFc = "0.1.0-alpha"
+tasksGenai = "0.10.24"
+localagentsFc = "0.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
