@@ -77,8 +77,8 @@ class Tokenizer:
       token_ids.extend(self._tokenizer.EncodeAsIds(prompt))
 
       if self._prompt_template.prompt_suffix is not None:
-        token_ids.append(
-            self._tokenizer.PieceToId(self._prompt_template.prompt_suffix)
+        token_ids.extend(
+            self._tokenizer.EncodeAsIds(self._prompt_template.prompt_suffix)
         )
 
     return token_ids
