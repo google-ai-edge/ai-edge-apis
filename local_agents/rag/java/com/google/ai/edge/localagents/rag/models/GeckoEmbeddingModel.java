@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Executor;
@@ -44,6 +45,10 @@ public final class GeckoEmbeddingModel implements Embedder<String> {
    */
   public GeckoEmbeddingModel(
       String embeddingModelPath, Optional<String> sentencePieceModelPath, boolean useGpu) {
+    validatePath(embeddingModelPath);
+    if (sentencePieceModelPath.isPresent()) {
+      validatePath(sentencePieceModelPath.get());
+    }
     modelHandle =
         nativeInitializeGeckoEmbeddingModel(
             embeddingModelPath, sentencePieceModelPath.orElse(""), useGpu);
@@ -102,9 +107,17 @@ public final class GeckoEmbeddingModel implements Embedder<String> {
     // (--
     // LINT.ThenChange(
     // //depot/https://github.com/google-ai-edge/ai-edge-apis/tree/main/local_agents/rag/core/protos/embedding_models.proto,
-    // //depot/https://github.com/google-ai-edge/ai-edge-apis/tree/main/local_agents/rag/java/com.google.ai.edge.localagents.rag/models/EmbedData.java
+    // //depot/https://github.com/google-ai-edge/ai-edge-apis/tree/main/local_agents/rag/java/com/google/ai/edge/localagents/rag/models/EmbedData.java
     // )
     // --)
+  }
+
+  private static void validatePath(String path) {
+    File file = new File(path);
+    if (!file.exists()) {
+      throw new IllegalArgumentException(
+          "File not found at " + path + ". Please check your configuration settings.");
+    }
   }
 
   private static byte[] toProtoBytes(EmbeddingRequest<String> request) {
