@@ -10,13 +10,13 @@ structured call to a function that executes an action, such as searching for
 up-to-date information, setting alarms, or making reservations.
 
 The AI Edge FC SDK is available for Android and can be run completely on-device
-with the LLM Inference API. Start using the SDK by following the [Android guide](https://ai.google.dev/edge/mediapipe/solutions/genai/fc/android),
+with the LLM Inference API. Start using the SDK by following the [Android guide](https://ai.google.dev/edge/mediapipe/solutions/genai/function_calling/android),
 which walks you through a basic implementation of a sample application using
 function calling.
 
 ## Guide
 
-See our [public documentation](https://ai.google.dev/edge/mediapipe/solutions/genai/fc) for more details on the SDK's usage.
+See our [public documentation](https://ai.google.dev/edge/mediapipe/solutions/genai/function_calling) for more details on the SDK's usage.
 
 ## Quickstart
 
