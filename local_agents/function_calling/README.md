@@ -16,7 +16,7 @@ function calling.
 
 ## Guide
 
-See our [public documentation](https://ai.google.dev/edge/mediapipe/solutions/genai/function_calling) for more details on the SDK's usage.
+See our [public documentation](https://ai.google.dev/edge/mediapipe/solutions/genai/fc) for more details on the SDK's usage.
 
 ## Quickstart
 
