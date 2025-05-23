@@ -91,8 +91,7 @@ internal fun Fieldset3Content(
     onHomePressed: () -> Unit,
     snackbarHostState: SnackbarHostState,
 ) {
-    // it is possible the patient has none of the possible conditions
-    val fieldsetIsCompleteAndValid = true
+    val fieldsetIsCompleteAndValid = medicalConditions.any { it.value }
 
     Scaffold(
         topBar = {
