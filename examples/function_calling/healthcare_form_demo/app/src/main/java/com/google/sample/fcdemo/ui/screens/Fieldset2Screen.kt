@@ -62,8 +62,8 @@ fun Fieldset2Screen(
     }
 
     Fieldset2Content(
-        sex = sex.toString(),
-        maritalStatus = maritalStatus.toString(),
+        sex = sex?.toString(),
+        maritalStatus = maritalStatus?.toString(),
         onSexChanged = onSexChanged,
         onMaritalStatusChanged = onMaritalStatusChanged,
         listeningState = listeningState,
