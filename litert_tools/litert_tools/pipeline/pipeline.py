@@ -561,6 +561,7 @@ class LiteRTLlmPipelineLoader(LlmPipelineLoader):
             The LiteRT LLM pipeline.
         """
         logging.info("Loading LiteRTLlmPipeline from: %s", file_path)
+
         try:
             file_path = os.path.abspath(file_path)
             if file_path and file_path.endswith(".task"):
@@ -572,12 +573,14 @@ class LiteRTLlmPipelineLoader(LlmPipelineLoader):
                 raw_tokenizer.Load(tokenizer_path)
 
                 prompt_template = file_processor.get_prompt_template()
-
-            elif tokenizer_location and self._uses_hugging_face():
+                
+            elif tokenizer_location:
+                
                 raw_tokenizer = transformers.AutoTokenizer.from_pretrained(
                     tokenizer_location
                 )
                 prompt_template = None
+                model_path = file_path
         except Exception as e:
             logging.error(
                 "Failed to obtain tokenizer from %s: %s",
