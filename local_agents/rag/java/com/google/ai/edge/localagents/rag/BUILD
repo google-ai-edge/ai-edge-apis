@@ -31,6 +31,10 @@ ai_edge_files(
     ],
 )
 
+# The next version of the RAG SDK.
+# The minor version code should be bumped after every release.
+RAG_SDK_VERSION = "0.3.0"
+
 android_library(
     name = "rag_lib",
     srcs = [
@@ -115,5 +119,5 @@ maven_artifact(
     lib_description = "The Google AI Edge RAG library.",
     lib_name = "Google AI Edge RAG",
     lib_url = "https://github.com/google-ai-edge/ai-edge-apis",
-    version = "0.2.0",
+    version = RAG_SDK_VERSION,
 )

@@ -26,6 +26,10 @@ package_group(
     ],
 )
 
+# The next version of the FC SDK.
+# The minor version code should be bumped after every release.
+FC_SDK_VERSION = "0.2.0"
+
 android_library(
     name = "session",
     srcs = ["Session.java"],
@@ -247,5 +251,5 @@ maven_artifact(
     lib_description = "The Google AI Edge Function Calling library.",
     lib_name = "Google AI Edge Function Calling",
     lib_url = "https://github.com/google-ai-edge/ai-edge-apis",
-    version = "0.1.0",
+    version = FC_SDK_VERSION,
 )
