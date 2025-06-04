@@ -31,37 +31,56 @@ import transformers
 
 # The external entry point for preparing the ready-to-use LLM Pipeline.
 def load(
-    repo_id: str, model_name: str, tokenizer_location: Optional[str] = None
-):
-  """Loads the LLM pipeline.
+    model_path: str,
+    repo_id: Optional[str] = None,
+    tokenizer_checkpoint: Optional[str] = None
+) -> Optional['LiteRTLlmPipeline']:
 
-  Args:
-    repo_id: The repository ID.
-    model_name: The name of the model.
-    tokenizer_location: The path to the tokenizer.
-
-  Returns:
-    The loaded LLM pipeline or None if the model is not supported.
-  """
-  hf_model_downloader = model_downloader_lib.HuggingFaceDownloader()
-  pipeline_loader = LiteRTLlmPipelineLoader(hf_model_downloader)
-  return pipeline_loader.load(repo_id, model_name, tokenizer_location)
-
-
-def local_load(
-     file_path: str, tokenizer_location: Optional[str] = None
-):
-    """Loads the LLM pipeline from a local .task file.
+    """Loads and initializes a ready-to-use LiteRT LLM pipeline.
+    
+    This is the main entry point for creating an LLM pipeline that can be used for
+    text generation. The function handles both local model files and remote models
+    from Hugging Face repositories.
 
     Args:
-      file_path: The path to the .task file.
-      tokenizer_location: The path to the tokenizer.
+        model_path: Model identifier. This can be either:
+            - A path to a local model file (.tflite or .task bundle)
+            - A model filename if using Hugging Face (requires repo_id)
+        repo_id: Hugging Face repository ID (e.g., "litert-community/Gemma3-1B-IT") if
+            downloading from Hugging Face. Leave as None for local models.
+            When provided, the function will first look for the model file in the
+            specified local path. If not found, it will download from the repository
+            to that path.
+        tokenizer_checkpoint: Optional path to tokenizer files. Only needed when:
+            - Using a raw .tflite file (not a .task bundle)
+            - The tokenizer isn't included in the .task bundle
+            - You want to override the default tokenizer
 
     Returns:
-      The loaded LLM pipeline.
+        An initialized LiteRTLlmPipeline instance, or None if loading failed.
+
+    Raises:
+        ValueError: If required arguments are missing or invalid.
+        RuntimeError: If model loading fails.
+
+    Examples:
+        Basic usage with local .task bundle:
+        >>> pipeline = load("models/gemma-2b-it.task")
+        >>> result = pipeline.generate("Explain quantum computing")
+        
+        Using Hugging Face repository (downloads if local file not found):
+        >>> pipeline = load(
+        ...     model_path="Gemma3-1B-IT_seq128_q8_ekv1280.task",
+        ...     repo_id="litert-community/Gemma3-1B-IT"
+        ... )
+        >>> result = pipeline.generate("Explain quantum computing")
     """
-    pipeline_loader = LiteRTLlmPipelineLoader()
-    return pipeline_loader.local_load(file_path, tokenizer_location)
+    pipeline_loader = (
+        LiteRTLlmPipelineLoader(model_downloader_lib.HuggingFaceDownloader())
+        if repo_id
+        else LiteRTLlmPipelineLoader()
+    )
+    return pipeline_loader.load(model_path, repo_id, tokenizer_checkpoint)
 
 
 class LlmPipeline(abc.ABC):
@@ -437,26 +456,16 @@ class LlmPipelineLoader:
     # Store the downloader if needed by subclasses, otherwise this can be empty
     self.model_downloader = model_downloader
 
-  def load(self, repo_id: str, filename: str, tokenizer_location: str):
-    """Loads the LLM pipeline.
+  def load(self,model_path: str,repo_id: str = None,tokenizer_checkpoint: Optional[str] = None):
+    """Loads the LiteRT LLM pipeline.
 
     Args:
-      repo_id: The repository ID for the model.
-      filename: The filename of the model within the repo.
-      tokenizer_location: The path or repo ID for the tokenizer.
-    """
-    # Base class load method can be empty or raise NotImplementedError
-    raise NotImplementedError
-  
-  def local_load(self, file_path: str, tokenizer_location: Optional[str] = None):
-    """Loads the LiteRT LLM pipeline from a local .task file.
-
-    Args:
-        file_path: The path to the .task file.
-        tokenizer_location: The path to the tokenizer.
+      model_path: The name of the model in huggingface or path to the model in local.
+      repo_id: The repository ID.
+      tokenizer_checkpoint: The path to the tokenizer.
 
     Returns:
-        The LiteRT LLM pipeline.
+      The LiteRT LLM pipeline.
     """
     # Base class load method can be empty or raise NotImplementedError
     raise NotImplementedError
@@ -472,37 +481,47 @@ class LiteRTLlmPipelineLoader(LlmPipelineLoader):
     )
 
   def load(
-      self,
-      repo_id: str,
-      filename: str,
-      tokenizer_location: Optional[str] = None,
+        self,
+        model_path: str,
+        repo_id: str = None,
+        tokenizer_checkpoint: Optional[str] = None,
   ) -> LiteRTLlmPipeline:
     """Loads the LiteRT LLM pipeline.
 
+
     Args:
+      model_path: The name of the model in huggingface or path to the model in local.
       repo_id: The repository ID.
-      filename: The filename of the model.
-      tokenizer_location: The path to the tokenizer.
+      tokenizer_checkpoint: The path to the tokenizer.
 
     Returns:
       The LiteRT LLM pipeline.
     """
-    try:
-      model_path = self.model_downloader.download_file(repo_id, filename)
-    except Exception as e:
-      logging.error(
-          "Failed to download the model from %s/%s: %s",
-          repo_id,
-          filename,
-          e,
-      )
-      raise
 
+    if repo_id:
+      try:
+        model_path = self.model_downloader.download_file(repo_id, model_path)
+      except Exception as e:
+        logging.error(
+            "Failed to download the model from %s/%s: %s",
+            repo_id,
+            model_path,
+            e,
+        )
+        raise
+      
+    raw_tokenizer = None
+    prompt_template = None  
     try:
       if model_path and model_path.endswith(".task"):
+        cache_dir = (
+            self.model_downloader.get_cache_dir()
+            if self._uses_hugging_face()
+            else os.path.dirname(model_path)
+        )
         # Extract tflite, tokenizer and metadata from .task bundle
         file_processor = task_file_processor_lib.TaskFileProcessor(
-            model_path, cache_dir=self.model_downloader.get_cache_dir()
+            model_path, cache_dir=cache_dir
         )
         model_path = file_processor.get_tflite_file_path()
 
@@ -511,15 +530,15 @@ class LiteRTLlmPipelineLoader(LlmPipelineLoader):
         raw_tokenizer.Load(tokenizer_path)
 
         prompt_template = file_processor.get_prompt_template()
-      elif tokenizer_location and self._uses_hugging_face():
+      elif tokenizer_checkpoint and self._uses_hugging_face():
         raw_tokenizer = transformers.AutoTokenizer.from_pretrained(
-            tokenizer_location
+            tokenizer_checkpoint
         )
         prompt_template = None
     except Exception as e:
       logging.error(
           "Failed to obtain tokenizer from %s: %s",
-          tokenizer_location,
+          tokenizer_checkpoint,
           e,
       )
       raise
@@ -546,69 +565,3 @@ class LiteRTLlmPipelineLoader(LlmPipelineLoader):
     pipeline = LiteRTLlmPipeline(interpreter, tokenizer)
     logging.info("LiteRTLlmPipeline loaded successfully.")
     return pipeline
-
-  def local_load(self,
-        file_path: str,
-        tokenizer_location: Optional[str] = None,
-    ) -> LiteRTLlmPipeline :
-        """Loads the LiteRT LLM pipeline from a local .task file.
-
-        Args:
-            file_path: The path to the .task file.
-            tokenizer_location: The path to the tokenizer.
-
-        Returns:
-            The LiteRT LLM pipeline.
-        """
-        logging.info("Loading LiteRTLlmPipeline from: %s", file_path)
-
-        try:
-            file_path = os.path.abspath(file_path)
-            if file_path and file_path.endswith(".task"):
-                file_processor = task_file_processor_lib.TaskFileProcessor(file_path=file_path, cache_dir=os.path.dirname(file_path))
-                model_path = file_processor.get_tflite_file_path()
-
-                tokenizer_path = file_processor.get_tokenizer_file_path()
-                raw_tokenizer = sp.SentencePieceProcessor()
-                raw_tokenizer.Load(tokenizer_path)
-
-                prompt_template = file_processor.get_prompt_template()
-                
-            elif tokenizer_location:
-                
-                raw_tokenizer = transformers.AutoTokenizer.from_pretrained(
-                    tokenizer_location
-                )
-                prompt_template = None
-                model_path = file_path
-        except Exception as e:
-            logging.error(
-                "Failed to obtain tokenizer from %s: %s",
-                tokenizer_location,
-                e,
-            )
-            raise
-
-
-        # Wrap the loaded tokenizer
-        tokenizer = tokenizer_lib.Tokenizer(raw_tokenizer, prompt_template)
-
-        # Load the interpreter
-        logging.info("Loading TFLite model from: %s", model_path)
-        try:
-            interpreter = interpreter_lib.InterpreterWithCustomOps(
-                custom_op_registerers=["pywrap_genai_ops.GenAIOpsRegisterer"],
-                model_path=model_path,
-                num_threads=2,  # Consider making num_threads configurable
-                experimental_default_delegate_latest_features=True,
-        )
-        except Exception as e:
-            logging.error(
-                "Failed to load TFLite interpreter from %s: %s", model_path, e
-            )
-            raise
-
-        # Create and return the pipeline with the wrapped tokenizer
-        pipeline = LiteRTLlmPipeline(interpreter, tokenizer)
-        logging.info("LiteRTLlmPipeline loaded successfully.")
-        return pipeline
