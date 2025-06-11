@@ -20,6 +20,7 @@ package_group(
     name = "default_visibility",
     packages = [
         "//local_agents/...",
+        "//third_party/odml/infra/...",
     ],
 )
 
