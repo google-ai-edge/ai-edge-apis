@@ -21,6 +21,7 @@ package_group(
     packages = [
         "//local_agents/...",
         "//third_party/odml/infra/...",
+        "//third_party/odml/litert_lm/...",
     ],
 )
 
