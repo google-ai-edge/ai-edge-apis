@@ -17,6 +17,7 @@
 
 import abc
 import logging
+import os
 import sys
 from typing import Optional, Sequence
 from ai_edge_litert import interpreter as interpreter_lib
@@ -30,21 +31,56 @@ import transformers
 
 # The external entry point for preparing the ready-to-use LLM Pipeline.
 def load(
-    repo_id: str, model_name: str, tokenizer_location: Optional[str] = None
-):
-  """Loads the LLM pipeline.
+    model_path: str,
+    repo_id: Optional[str] = None,
+    tokenizer_path: Optional[str] = None,
+) -> "LiteRTLlmPipeline":
+  """Loads and initializes a ready-to-use LiteRT LLM pipeline.
+
+  This is the main entry point for creating an LLM pipeline that can be used for
+  text generation. The function handles both local model files and remote models
+  from Hugging Face repositories.
 
   Args:
-    repo_id: The repository ID.
-    model_name: The name of the model.
-    tokenizer_location: The path to the tokenizer.
+      model_path: Model identifier. This can be either: - A path to a local
+        model file (.tflite or .task bundle) - A model filename if using
+        HuggingFace (requires repo_id)
+      repo_id: Hugging Face repository ID (e.g.,
+        "litert-community/Gemma3-1B-IT") if downloading from Hugging Face. Leave
+        as None for local models. When provided, the function will first look
+        for the model file in the specified local path. If not found, it will
+        download from the repository to that path.
+      tokenizer_path: Optional path to tokenizer files. Only needed when using a
+        raw .tflite file (not a .task bundle).
 
   Returns:
-    The loaded LLM pipeline or None if the model is not supported.
+      An initialized LiteRTLlmPipeline instance, or None if loading failed.
+
+  Raises:
+      ValueError: If required arguments are missing or invalid.
+      RuntimeError: If model loading fails.
+
+  Examples:
+      Basic usage with local .task bundle:
+      >>> pipeline = load("models/gemma-2b-it.task")
+      >>> result = pipeline.generate("Explain quantum computing")
+
+      Using Hugging Face repository (downloads if local file not found):
+      >>> pipeline = load(
+      ...     model_path="Gemma3-1B-IT_seq128_q8_ekv1280.task",
+      ...     repo_id="litert-community/Gemma3-1B-IT"
+      ... )
+      >>> result = pipeline.generate("Explain quantum computing")
   """
-  hf_model_downloader = model_downloader_lib.HuggingFaceDownloader()
-  pipeline_loader = LiteRTLlmPipelineLoader(hf_model_downloader)
-  return pipeline_loader.load(repo_id, model_name, tokenizer_location)
+  if os.path.exists(model_path):
+    pipeline_loader = LiteRTLlmPipelineLoader()
+    return pipeline_loader.load(model_path, repo_id, tokenizer_path)
+  elif repo_id:
+    hf_model_downloader = model_downloader_lib.HuggingFaceDownloader()
+    pipeline_loader = LiteRTLlmPipelineLoader(hf_model_downloader)
+    return pipeline_loader.load(model_path, repo_id, tokenizer_path)
+  else:
+    raise ValueError("Model path not found locally and no repo_id provided.")
 
 
 class LlmPipeline(abc.ABC):
@@ -93,7 +129,7 @@ class LiteRTLlmPipeline(LlmPipeline):
 
     Args:
       shape: The shape of the mask input to the model.
-      k: all elements below the k-th diagonal are set to 0.
+      k: All elements below the k-th diagonal are set to 0.
 
     Returns:
       The mask for the input to the model. All the elements in the mask are set
@@ -203,10 +239,10 @@ class LiteRTLlmPipeline(LlmPipeline):
     """Runs prefill and returns the kv cache.
 
     Args:
-      prefill_token_ids: The token ids of the prefill input.
+      prefill_token_ids: The token IDs of the prefill input.
 
     Returns:
-      The updated kv cache.
+      The updated KV cache.
     """
     if not self._prefill_runner:
       raise ValueError("Prefill runner is not initialized.")
@@ -253,7 +289,7 @@ class LiteRTLlmPipeline(LlmPipeline):
       logits: The logits from the decoder.
 
     Returns:
-      The next token id.
+      The next token ID.
     """
     return int(np.argmax(logits))
 
@@ -265,17 +301,17 @@ class LiteRTLlmPipeline(LlmPipeline):
       max_decode_steps: int,
       print_text: bool = False,
   ) -> str:
-    """Runs decode and outputs the token ids from greedy sampler.
+    """Runs decode and outputs the token IDs from greedy sampler.
 
     Args:
       start_pos: The position of the first token of the decode input.
-      start_token_id: The token id of the first token of the decode input.
-      kv_cache: The kv cache from the prefill.
-      max_decode_steps: The max decode steps.
+      start_token_id: The token ID of the first token of the decode input.
+      kv_cache: The KV cache from the prefill.
+      max_decode_steps: The maximum decode steps.
       print_text: Whether to print the decoded text to the console.
 
     Returns:
-      The token ids from the greedy sampler.
+      The token IDs from the greedy sampler.
     """
     next_pos = start_pos
     next_token = start_token_id
@@ -372,7 +408,7 @@ class LiteRTLlmPipeline(LlmPipeline):
       self._init_prefill_runner(num_input_tokens)
 
     # Run prefill.
-    # Prefill up to the seond to the last token of the prompt, because the last
+    # Prefill up to the second to the last token of the prompt, because the last
     # token of the prompt will be used to bootstrap decode.
     prefill_token_length = len(token_ids) - 1
     logging.info("Running prefill")
@@ -411,7 +447,10 @@ class LiteRTLlmPipeline(LlmPipeline):
 class LlmPipelineLoader:
   """Base class for LLM pipeline loader."""
 
-  def __init__(self, model_downloader: model_downloader_lib.ModelDownloader):
+  def __init__(
+      self,
+      model_downloader: Optional[model_downloader_lib.ModelDownloader] = None,
+  ):
     """Initializes the base class.
 
     Args:
@@ -420,13 +459,22 @@ class LlmPipelineLoader:
     # Store the downloader if needed by subclasses, otherwise this can be empty
     self.model_downloader = model_downloader
 
-  def load(self, repo_id: str, filename: str, tokenizer_location: str):
-    """Loads the LLM pipeline.
+  def load(
+      self,
+      model_path: str,
+      repo_id: Optional[str] = None,
+      tokenizer_path: Optional[str] = None,
+  ):
+    """Loads the LiteRT LLM pipeline.
 
     Args:
-      repo_id: The repository ID for the model.
-      filename: The filename of the model within the repo.
-      tokenizer_location: The path or repo ID for the tokenizer.
+      model_path: The name of the model in huggingface or path to the model in
+        local.
+      repo_id: The repository ID.
+      tokenizer_path: The path to the tokenizer.
+
+    Returns:
+      The LiteRT LLM pipeline.
     """
     # Base class load method can be empty or raise NotImplementedError
     raise NotImplementedError
@@ -436,43 +484,52 @@ class LiteRTLlmPipelineLoader(LlmPipelineLoader):
   """LiteRT LLM pipeline loader."""
 
   def _uses_hugging_face(self) -> bool:
-    """Checks if the model is from hugging face."""
+    """Checks if the model is from Hugging Face."""
     return isinstance(
         self.model_downloader, model_downloader_lib.HuggingFaceDownloader
     )
 
   def load(
       self,
-      repo_id: str,
-      filename: str,
-      tokenizer_location: Optional[str] = None,
+      model_path: str,
+      repo_id: Optional[str] = None,
+      tokenizer_path: Optional[str] = None,
   ) -> LiteRTLlmPipeline:
     """Loads the LiteRT LLM pipeline.
 
     Args:
+      model_path: The name of the model in huggingface or path to the model in
+        local.
       repo_id: The repository ID.
-      filename: The filename of the model.
-      tokenizer_location: The path to the tokenizer.
+      tokenizer_path: The path to the tokenizer.
 
     Returns:
       The LiteRT LLM pipeline.
     """
-    try:
-      model_path = self.model_downloader.download_file(repo_id, filename)
-    except Exception as e:
-      logging.error(
-          "Failed to download the mode from %s/%s: %s",
-          repo_id,
-          filename,
-          e,
-      )
-      raise
+    if self.model_downloader and not os.path.exists(model_path):
+      try:
+        model_path = self.model_downloader.download_file(repo_id, model_path)
+      except Exception as e:
+        logging.error(
+            "Failed to download the model from %s/%s: %s",
+            repo_id,
+            model_path,
+            e,
+        )
+        raise
 
+    raw_tokenizer = None
+    prompt_template = None
     try:
       if model_path and model_path.endswith(".task"):
+        cache_dir = (
+            self.model_downloader.get_cache_dir()
+            if self.model_downloader
+            else os.path.dirname(model_path)
+        )
         # Extract tflite, tokenizer and metadata from .task bundle
         file_processor = task_file_processor_lib.TaskFileProcessor(
-            model_path, cache_dir=self.model_downloader.get_cache_dir()
+            model_path, cache_dir=cache_dir
         )
         model_path = file_processor.get_tflite_file_path()
 
@@ -481,15 +538,19 @@ class LiteRTLlmPipelineLoader(LlmPipelineLoader):
         raw_tokenizer.Load(tokenizer_path)
 
         prompt_template = file_processor.get_prompt_template()
-      elif tokenizer_location and self._uses_hugging_face():
+      elif tokenizer_path and os.path.exists(tokenizer_path):
+        raw_tokenizer = sp.SentencePieceProcessor()
+        raw_tokenizer.Load(tokenizer_path)
+        prompt_template = None
+      elif tokenizer_path and repo_id and self._uses_hugging_face():
         raw_tokenizer = transformers.AutoTokenizer.from_pretrained(
-            tokenizer_location
+            tokenizer_path
         )
         prompt_template = None
     except Exception as e:
       logging.error(
           "Failed to obtain tokenizer from %s: %s",
-          tokenizer_location,
+          tokenizer_path,
           e,
       )
       raise
