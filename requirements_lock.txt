@@ -58,5 +58,5 @@ transformers==4.51.3
     # via -r requirements.txt
 typing-extensions==4.13.2
     # via huggingface-hub
-urllib3==2.4.0
+urllib3==2.5.0
     # via requests
