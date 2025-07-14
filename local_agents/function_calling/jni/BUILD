@@ -14,6 +14,7 @@
 
 load("@rules_jni//jni:cc_jni_library.bzl", "cc_jni_library")
 load("//third_party:ai_edge_files.bzl", "ai_edge_files")
+load("//third_party/bazel_rules/rules_cc/cc:cc_library.bzl", "cc_library")
 
 package(default_visibility = [
     ":default_visibility",
