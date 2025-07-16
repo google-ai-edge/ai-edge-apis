@@ -90,6 +90,13 @@ public abstract class EmbedData<T> {
     return EmbedData.<T>builder().setData(data).setTask(taskType).setMetadata(metadata).build();
   }
 
+  public Builder<T> toBuilder() {
+    return new AutoValue_EmbedData.Builder<T>()
+        .setData(getData())
+        .setTask(getTask())
+        .setMetadata(getMetadata());
+  }
+
   /** Auto Builder. */
   @AutoValue.Builder
   public abstract static class Builder<T> {

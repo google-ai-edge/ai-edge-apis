@@ -33,6 +33,7 @@ import com.google.common.primitives.Floats;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.Executor;
+import org.jspecify.annotations.Nullable;
 
 /** The text embedding model provided by AICore. */
 public final class AiCoreTextEmbeddingModel implements Embedder<String> {
@@ -42,24 +43,31 @@ public final class AiCoreTextEmbeddingModel implements Embedder<String> {
   private final AiCoreClient aiCoreClient;
   private TextEmbeddingService textEmbeddingService;
   private final Executor workerExecutor;
+  private final @Nullable EmbeddingDataProcessor<String> embeddingDataProcessor;
 
   public AiCoreTextEmbeddingModel(Context context) {
-    this(context, ContextCompat.getMainExecutor(context));
+    this(context, ContextCompat.getMainExecutor(context), null);
   }
 
-  public AiCoreTextEmbeddingModel(Context context, Executor workerExecutor) {
+  public AiCoreTextEmbeddingModel(
+      Context context,
+      Executor workerExecutor,
+      @Nullable EmbeddingDataProcessor<String> embeddingDataProcessor) {
     this.aiCoreClient = AiCoreClient.create(AiCoreClientOptions.builder(context).build());
     this.workerExecutor = workerExecutor;
+    this.embeddingDataProcessor = embeddingDataProcessor;
   }
 
   @VisibleForTesting
   public AiCoreTextEmbeddingModel(
       AiCoreClient aiCoreClient,
       TextEmbeddingService textEmbeddingService,
-      Executor workerExecutor) {
+      Executor workerExecutor,
+      @Nullable EmbeddingDataProcessor<String> embeddingDataProcessor) {
     this.aiCoreClient = aiCoreClient;
     this.textEmbeddingService = textEmbeddingService;
     this.workerExecutor = workerExecutor;
+    this.embeddingDataProcessor = embeddingDataProcessor;
   }
 
   public ListenableFuture<Boolean> initialize() {
@@ -110,8 +118,12 @@ public final class AiCoreTextEmbeddingModel implements Embedder<String> {
 
   @Override
   public ListenableFuture<ImmutableList<Float>> getEmbeddings(EmbeddingRequest<String> request) {
+    EmbedData<String> embedData = request.getEmbedData().get(0);
+    if (embeddingDataProcessor != null) {
+      embedData = embeddingDataProcessor.process(embedData);
+    }
     ImmutableList<TextEmbeddingMessage> messages =
-        ImmutableList.of(TextEmbeddingMessage.create(request.getEmbedData().get(0).getData()));
+        ImmutableList.of(TextEmbeddingMessage.create(embedData.getData()));
     TextEmbeddingRequest aicoreRequest = TextEmbeddingRequest.builder(messages).build();
     return Futures.transform(
         textEmbeddingService.runInference(aicoreRequest),
@@ -128,7 +140,13 @@ public final class AiCoreTextEmbeddingModel implements Embedder<String> {
       EmbeddingRequest<String> request) {
     ImmutableList<TextEmbeddingMessage> messages =
         request.getEmbedData().stream()
-            .map(embedData -> TextEmbeddingMessage.create(embedData.getData()))
+            .map(
+                embedData -> {
+                  if (embeddingDataProcessor != null) {
+                    embedData = embeddingDataProcessor.process(embedData);
+                  }
+                  return TextEmbeddingMessage.create(embedData.getData());
+                })
             .collect(toImmutableList());
     TextEmbeddingRequest aicoreRequest = TextEmbeddingRequest.builder(messages).build();
     return Futures.transform(
