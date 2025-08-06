@@ -46,7 +46,10 @@ public abstract class EmbedData<T> {
     QUESTION_ANSWERING(6),
 
     /** Specifies that the given text will be used for fact verification. */
-    FACT_VERIFICATION(7);
+    FACT_VERIFICATION(7),
+
+    /** Specifies that the given text will be used for code retrieval. */
+    CODE_RETRIEVAL(8);
 
     // Magic java proto enum values.
     TaskType(int value) {
@@ -72,28 +75,44 @@ public abstract class EmbedData<T> {
   public abstract TaskType getTask();
 
   /**
+   * Whether the data is a query. If true, the data will be used as a query when embedding.
+   * Otherwise, the data will be used as a document.
+   */
+  public abstract boolean getIsQuery();
+
+  /**
    * Optional identifier of the content. This may be prepended to the input or otherwise used within
    * a prompt, depending on the task-specific instruction format.
    */
   public abstract ImmutableMap<String, Object> getMetadata();
 
   public static <T> Builder<T> builder() {
-    return new AutoValue_EmbedData.Builder<T>().setMetadata(ImmutableMap.of());
+    return new AutoValue_EmbedData.Builder<T>().setIsQuery(false).setMetadata(ImmutableMap.of());
   }
 
   public static <T> EmbedData<T> create(T data, TaskType taskType) {
     return EmbedData.<T>builder().setData(data).setTask(taskType).build();
   }
 
+  public static <T> EmbedData<T> create(T data, TaskType taskType, boolean isQuery) {
+    return EmbedData.<T>builder().setData(data).setTask(taskType).setIsQuery(isQuery).build();
+  }
+
   public static <T> EmbedData<T> create(
-      T data, TaskType taskType, ImmutableMap<String, Object> metadata) {
-    return EmbedData.<T>builder().setData(data).setTask(taskType).setMetadata(metadata).build();
+      T data, TaskType taskType, boolean isQuery, ImmutableMap<String, Object> metadata) {
+    return EmbedData.<T>builder()
+        .setData(data)
+        .setTask(taskType)
+        .setIsQuery(isQuery)
+        .setMetadata(metadata)
+        .build();
   }
 
   public Builder<T> toBuilder() {
     return new AutoValue_EmbedData.Builder<T>()
         .setData(getData())
         .setTask(getTask())
+        .setIsQuery(getIsQuery())
         .setMetadata(getMetadata());
   }
 
@@ -103,6 +122,8 @@ public abstract class EmbedData<T> {
     public abstract Builder<T> setData(T data);
 
     public abstract Builder<T> setTask(TaskType taskType);
+
+    public abstract Builder<T> setIsQuery(boolean isQuery);
 
     public abstract Builder<T> setMetadata(Map<String, Object> additionalData);
 

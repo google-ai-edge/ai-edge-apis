@@ -101,6 +101,8 @@ public final class GeckoEmbeddingModel implements Embedder<String> {
         return EmbedText.TaskType.QUESTION_ANSWERING;
       case FACT_VERIFICATION:
         return EmbedText.TaskType.FACT_VERIFICATION;
+      case CODE_RETRIEVAL:
+        return EmbedText.TaskType.CODE_RETRIEVAL;
       default:
         return EmbedText.TaskType.TASK_TYPE_UNSPECIFIED;
     }
@@ -126,7 +128,8 @@ public final class GeckoEmbeddingModel implements Embedder<String> {
       var embedTextBuilder =
           EmbedText.newBuilder()
               .setText(embedData.getData())
-              .setTask(toProtoTaskType(embedData.getTask()));
+              .setTask(toProtoTaskType(embedData.getTask()))
+              .setIsQuery(embedData.getIsQuery());
       if (embedData.getMetadata().containsKey(TITLE_KEY)) {
         embedTextBuilder.setTitle(embedData.getMetadata().get(TITLE_KEY).toString());
       }

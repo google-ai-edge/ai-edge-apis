@@ -26,6 +26,8 @@ message RetrievalConfig {
     TASK_UNSPECIFIED = 0;
     RETRIEVAL_QUERY = 1;
     QUESTION_ANSWERING = 2;
+    FACT_VERIFICATION = 3;
+    CODE_RETRIEVAL = 4;
   }
   optional int32 top_k = 1 [default = 5];
   optional float min_similarity_score = 2 [default = 0.0];

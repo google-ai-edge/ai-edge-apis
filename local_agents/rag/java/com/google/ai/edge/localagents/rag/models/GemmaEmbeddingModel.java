@@ -82,16 +82,26 @@ public final class GemmaEmbeddingModel implements Embedder<String> {
   private static EmbedText.TaskType toProtoTaskType(EmbedData.TaskType taskType) {
     // Make sure to keep the enum values in sync between layers.
     // (-- LINT.IfChange --)
-    return switch (taskType) {
-      case RETRIEVAL_QUERY -> EmbedText.TaskType.RETRIEVAL_QUERY;
-      case RETRIEVAL_DOCUMENT -> EmbedText.TaskType.RETRIEVAL_DOCUMENT;
-      case SEMANTIC_SIMILARITY -> EmbedText.TaskType.SEMANTIC_SIMILARITY;
-      case CLASSIFICATION -> EmbedText.TaskType.CLASSIFICATION;
-      case CLUSTERING -> EmbedText.TaskType.CLUSTERING;
-      case QUESTION_ANSWERING -> EmbedText.TaskType.QUESTION_ANSWERING;
-      case FACT_VERIFICATION -> EmbedText.TaskType.FACT_VERIFICATION;
-      default -> EmbedText.TaskType.TASK_TYPE_UNSPECIFIED;
-    };
+    switch (taskType) {
+      case RETRIEVAL_QUERY:
+        return EmbedText.TaskType.RETRIEVAL_QUERY;
+      case RETRIEVAL_DOCUMENT:
+        return EmbedText.TaskType.RETRIEVAL_DOCUMENT;
+      case SEMANTIC_SIMILARITY:
+        return EmbedText.TaskType.SEMANTIC_SIMILARITY;
+      case CLASSIFICATION:
+        return EmbedText.TaskType.CLASSIFICATION;
+      case CLUSTERING:
+        return EmbedText.TaskType.CLUSTERING;
+      case QUESTION_ANSWERING:
+        return EmbedText.TaskType.QUESTION_ANSWERING;
+      case FACT_VERIFICATION:
+        return EmbedText.TaskType.FACT_VERIFICATION;
+      case CODE_RETRIEVAL:
+        return EmbedText.TaskType.CODE_RETRIEVAL;
+      default:
+        return EmbedText.TaskType.TASK_TYPE_UNSPECIFIED;
+    }
     // (--
     // LINT.ThenChange(
     // //depot/https://github.com/google-ai-edge/ai-edge-apis/tree/main/local_agents/rag/core/protos/embedding_models.proto,
@@ -114,7 +124,8 @@ public final class GemmaEmbeddingModel implements Embedder<String> {
       var embedTextBuilder =
           EmbedText.newBuilder()
               .setText(embedData.getData())
-              .setTask(toProtoTaskType(embedData.getTask()));
+              .setTask(toProtoTaskType(embedData.getTask()))
+              .setIsQuery(embedData.getIsQuery());
       if (embedData.getMetadata().containsKey(TITLE_KEY)) {
         embedTextBuilder.setTitle(embedData.getMetadata().get(TITLE_KEY).toString());
       }

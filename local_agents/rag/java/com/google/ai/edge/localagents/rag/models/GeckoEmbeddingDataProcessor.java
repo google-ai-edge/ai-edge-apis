@@ -19,38 +19,60 @@ import androidx.annotation.VisibleForTesting;
 public final class GeckoEmbeddingDataProcessor implements EmbeddingDataProcessor<String> {
   public static final String TITLE_KEY = "title";
 
-  @VisibleForTesting
-  public static final String RETRIEVAL_DOCUMENT_TEMPLATE = "title: %s | text: %s";
+  @VisibleForTesting public static final String DOCUMENT_TEMPLATE = "title: %s | text: %s";
 
-  @VisibleForTesting public static final String DEFAULT_TEMPLATE = "task: %s | query: %s";
+  @VisibleForTesting public static final String QUERY_TEMPLATE = "task: %s | query: %s";
 
   public GeckoEmbeddingDataProcessor() {}
 
   @Override
   public EmbedData<String> process(EmbedData<String> embedData) {
     String text;
-    if (embedData.getTask() == EmbedData.TaskType.RETRIEVAL_DOCUMENT) {
-      text =
-          String.format(
-              RETRIEVAL_DOCUMENT_TEMPLATE,
-              embedData.getMetadata().get(TITLE_KEY) == null
-                  ? "none"
-                  : embedData.getMetadata().get(TITLE_KEY),
-              embedData.getData());
-    } else {
-      String task =
-          switch (embedData.getTask()) {
-            case EmbedData.TaskType.RETRIEVAL_QUERY -> "search result";
-            case EmbedData.TaskType.RETRIEVAL_DOCUMENT -> "";
-            case EmbedData.TaskType.SEMANTIC_SIMILARITY -> "sentence similarity";
-            case EmbedData.TaskType.CLASSIFICATION -> "classification";
-            case EmbedData.TaskType.CLUSTERING -> "search result";
-            case EmbedData.TaskType.QUESTION_ANSWERING -> "question answering";
-            case EmbedData.TaskType.FACT_VERIFICATION -> "fact checking";
-            default -> "search result";
-          };
-      text = String.format(DEFAULT_TEMPLATE, task, embedData.getData());
+    switch (embedData.getTask()) {
+      case EmbedData.TaskType.RETRIEVAL_DOCUMENT -> {
+        text = formatDocument(embedData);
+      }
+      case EmbedData.TaskType.RETRIEVAL_QUERY -> {
+        text = formatQuery(embedData);
+      }
+      case EmbedData.TaskType.QUESTION_ANSWERING,
+          EmbedData.TaskType.FACT_VERIFICATION,
+          EmbedData.TaskType.CODE_RETRIEVAL -> {
+        text = embedData.getIsQuery() ? formatQuery(embedData) : formatDocument(embedData);
+      }
+      case EmbedData.TaskType.SEMANTIC_SIMILARITY,
+          EmbedData.TaskType.CLASSIFICATION,
+          EmbedData.TaskType.CLUSTERING -> {
+        text = formatQuery(embedData);
+      }
+      default -> {
+        text = formatQuery(embedData);
+      }
     }
     return embedData.toBuilder().setData(text).build();
+  }
+
+  private String formatQuery(EmbedData<String> embedData) {
+    String task =
+        switch (embedData.getTask()) {
+          case EmbedData.TaskType.RETRIEVAL_QUERY -> "search result";
+          case EmbedData.TaskType.RETRIEVAL_DOCUMENT -> "";
+          case EmbedData.TaskType.SEMANTIC_SIMILARITY -> "sentence similarity";
+          case EmbedData.TaskType.CLASSIFICATION -> "classification";
+          case EmbedData.TaskType.CLUSTERING -> "clustering";
+          case EmbedData.TaskType.QUESTION_ANSWERING -> "question answering";
+          case EmbedData.TaskType.FACT_VERIFICATION -> "fact checking";
+          case EmbedData.TaskType.CODE_RETRIEVAL -> "code retrieval";
+          default -> "search result";
+        };
+    return String.format(QUERY_TEMPLATE, task, embedData.getData());
+  }
+
+  private String formatDocument(EmbedData<String> embedData) {
+    String title =
+        !embedData.getMetadata().containsKey(TITLE_KEY)
+            ? "none"
+            : (String) embedData.getMetadata().get(TITLE_KEY);
+    return String.format(DOCUMENT_TEMPLATE, title, embedData.getData());
   }
 }

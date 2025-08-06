@@ -69,7 +69,7 @@ public final class DefaultSemanticTextMemory implements SemanticMemory<String> {
   public ListenableFuture<RetrievalResponse<String>> retrieveResults(
       RetrievalRequest<String> request) {
     EmbedData.Builder<String> embedDataBuilder =
-        EmbedData.<String>builder().setData(request.getQuery());
+        EmbedData.<String>builder().setData(request.getQuery()).setIsQuery(true);
     switch (request.getConfig().getTask()) {
       case TASK_UNSPECIFIED:
       case RETRIEVAL_QUERY:
@@ -77,6 +77,12 @@ public final class DefaultSemanticTextMemory implements SemanticMemory<String> {
         break;
       case QUESTION_ANSWERING:
         embedDataBuilder.setTask(EmbedData.TaskType.QUESTION_ANSWERING);
+        break;
+      case FACT_VERIFICATION:
+        embedDataBuilder.setTask(EmbedData.TaskType.FACT_VERIFICATION);
+        break;
+      case CODE_RETRIEVAL:
+        embedDataBuilder.setTask(EmbedData.TaskType.CODE_RETRIEVAL);
         break;
     }
     EmbeddingRequest<String> embeddingRequest =

@@ -23,6 +23,8 @@ public abstract class RetrievalConfig {
     TASK_UNSPECIFIED,
     RETRIEVAL_QUERY,
     QUESTION_ANSWERING,
+    FACT_VERIFICATION,
+    CODE_RETRIEVAL,
   }
 
   /** This is the number of top K elements to retrieve. */

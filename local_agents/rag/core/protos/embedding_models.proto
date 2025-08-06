@@ -46,6 +46,9 @@ message EmbedText {
 
     // Specifies that the given text will be used for fact verification.
     FACT_VERIFICATION = 7;
+
+    // Specifies that the given text will be used for code retrieval.
+    CODE_RETRIEVAL = 8;
   }
   // (--
   // LINT.ThenChange(
@@ -60,6 +63,9 @@ message EmbedText {
   // instruction format.
   optional string title = 2;
   optional string text = 3;
+  // Whether the text is a query. If true, the text will be used as a query.
+  // Otherwise, the text will be used as a document.
+  optional bool is_query = 4;
 }
 
 message TextEmbeddingRequest {
