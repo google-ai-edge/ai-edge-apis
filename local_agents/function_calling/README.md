@@ -254,8 +254,11 @@ if (message.hasFunctionCall()) {
               Struct.newBuilder()
                   .putFields("result", Value.newBuilder().setStringValue(result).build()))
           .build();
-  }
-  var response = chat.sendMessage(functionResponse);
+  var functionResponseContent = Content.newBuilder()
+        .setRole("user")
+        .addParts(Part.newBuilder().setFunctionResponse(functionResponse))
+        .build();
+  var response = chat.sendMessage(functionResponseContent);
 } else if (message.hasText()) {
   Log.i(message.getText());
 }
