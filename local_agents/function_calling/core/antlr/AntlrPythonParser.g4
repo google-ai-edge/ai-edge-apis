@@ -6,7 +6,7 @@ options {
 }
 
 main: expr EOF;
-expr: functionCall | functionCallList;
+expr: functionCall+ | functionCallList;
 
 value: INT | FLOAT | BOOL | STRING | NONE | list | dict | object;
 

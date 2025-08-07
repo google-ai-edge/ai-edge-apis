@@ -40,6 +40,8 @@
 #include "absl/status/statusor.h"      // from @abseil-cpp
 #include "absl/strings/numbers.h"      // from @abseil-cpp
 #include "absl/strings/str_cat.h"      // from @abseil-cpp
+#include "absl/strings/str_join.h"     // from @abseil-cpp
+#include "absl/strings/str_split.h"    // from @abseil-cpp
 #include "absl/strings/string_view.h"  // from @abseil-cpp
 #include "atn/ATNConfigSet.h"
 #include "dfa/DFA.h"
@@ -474,6 +476,24 @@ void JsonListener::enterFunctionCall(
   }
 }
 
+std::string FilterFunctionCallString(const std::string& function_call_string,
+                                     const RE2& regex) {
+  std::vector<absl::string_view> lines =
+      absl::StrSplit(function_call_string, '\n');
+  std::string captured_part;
+  std::vector<std::string> captured_lines;
+
+  for (absl::string_view line : lines) {
+    if (RE2::PartialMatch(line, regex, &captured_part)) {
+      captured_lines.push_back(captured_part);
+    } else {
+      captured_lines.push_back(std::string(line));
+    }
+  }
+
+  return absl::StrJoin(captured_lines, "\n");
+}
+
 }  // namespace
 
 absl::StatusOr<std::vector<FunctionCall>> ParsePythonExpression(
@@ -600,7 +620,8 @@ TextAndFunctionCalls ParseTextAndFunctionCallsString(
 absl::StatusOr<GenerateContentResponse> ParseResponse(
     absl::string_view response_str, absl::string_view code_fence_start,
     absl::string_view code_fence_end, absl::string_view response_role,
-    const SyntaxType& syntax_type, bool escape_in_fence_strings) {
+    const SyntaxType& syntax_type, bool escape_in_fence_strings,
+    absl::string_view tool_code_regex) {
   GenerateContentResponse response;
   Candidate* candidate = response.add_candidates();
   Content* content = candidate->mutable_content();
@@ -612,13 +633,26 @@ absl::StatusOr<GenerateContentResponse> ParseResponse(
     content->add_parts()->set_text(text_and_function_calls.text);
   }
   if (!text_and_function_calls.function_calls.empty()) {
+    std::string function_calls_to_parse =
+        std::string(text_and_function_calls.function_calls);
+    if (!tool_code_regex.empty()) {
+      RE2 regex(tool_code_regex);
+      if (!regex.ok()) {
+        return absl::InvalidArgumentError(
+            absl::StrCat("Invalid tool_code_regex: ", tool_code_regex));
+      }
+      function_calls_to_parse =
+          FilterFunctionCallString(function_calls_to_parse, regex);
+      if (function_calls_to_parse.empty()) {
+        return response;
+      }
+    }
+
     absl::StatusOr<std::vector<FunctionCall>> function_calls;
     if (syntax_type == SyntaxType::kPython) {
-      function_calls =
-          ParsePythonExpression(text_and_function_calls.function_calls);
+      function_calls = ParsePythonExpression(function_calls_to_parse);
     } else if (syntax_type == SyntaxType::kJson) {
-      function_calls =
-          ParseJsonExpression(text_and_function_calls.function_calls);
+      function_calls = ParseJsonExpression(function_calls_to_parse);
     } else {
       return absl::InvalidArgumentError("Unsupported syntax type.");
     }

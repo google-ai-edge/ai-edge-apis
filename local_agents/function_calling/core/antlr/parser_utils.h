@@ -81,6 +81,8 @@ TextAndFunctionCalls ParseTextAndFunctionCallsString(
 //      "model"). `syntax_type`: The syntax type of the function calls string.
 //   `escape_in_fence_strings`: If true, regex special characters
 //      within the fence strings will be escaped.
+//   `tool_code_regex`: A regex with a capture group used to filter each line
+//      of the function calls string.
 //
 // Returns:
 //   A StatusOr containing the populated GenerateContentResponse proto on
@@ -91,7 +93,8 @@ ParseResponse(absl::string_view response_str,
               absl::string_view code_fence_start,
               absl::string_view code_fence_end, absl::string_view response_role,
               const SyntaxType& syntax_type,
-              bool escape_in_fence_strings = true);
+              bool escape_in_fence_strings = true,
+              absl::string_view tool_code_regex = "");
 
 }  // namespace odml::generativeai
 
