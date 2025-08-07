@@ -28,8 +28,9 @@ import java.util.concurrent.Executors;
 /** The on-device Gemma embedding model. */
 public final class GemmaEmbeddingModel implements Embedder<String> {
   public static final String TITLE_KEY = "title";
-  private final long modelHandle;
+  private long modelHandle;
   private final Executor workerExecutor;
+  private final ListenableFuture<Void> initializationFuture;
 
   static {
     System.loadLibrary("gemma_embedding_model_jni");
@@ -46,14 +47,22 @@ public final class GemmaEmbeddingModel implements Embedder<String> {
       String embeddingModelPath, String sentencePieceModelPath, boolean useGpu) {
     validatePath(embeddingModelPath);
     validatePath(sentencePieceModelPath);
-    modelHandle =
-        nativeInitializeGemmaEmbeddingModel(embeddingModelPath, sentencePieceModelPath, useGpu);
+
     workerExecutor =
         Executors.newSingleThreadExecutor(
             new ThreadFactoryBuilder()
                 .setNameFormat("gemma-embedder-pool-%d")
                 .setPriority(Thread.NORM_PRIORITY)
                 .build());
+
+    initializationFuture =
+        Futures.submit(
+            () -> {
+              modelHandle =
+                  nativeInitializeGemmaEmbeddingModel(
+                      embeddingModelPath, sentencePieceModelPath, useGpu);
+            },
+            workerExecutor);
   }
 
   @Override
