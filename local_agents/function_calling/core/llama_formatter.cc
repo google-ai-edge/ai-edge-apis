@@ -44,10 +44,6 @@ using ::odml::genai_modules::core::proto::GenerateContentRequest;
 using ::odml::genai_modules::core::proto::GenerateContentResponse;
 using ::odml::genai_modules::core::proto::Tool;
 
-constexpr absl::string_view kStartHeader = "<|start_header_id|>";
-constexpr absl::string_view kEndHeader = "<|end_header_id|>";
-constexpr absl::string_view kEndTurn = "<|eot_id|>";
-
 absl::StatusOr<std::string> FormatFunctionResponse(
     const FunctionResponse& function_response) {
   std::stringstream ss;
@@ -62,7 +58,8 @@ absl::StatusOr<std::string> FormatLlamaSystemMessage(
     const ModelFormatterOptions& formatter_options) {
   std::stringstream prompt;
   if (formatter_options.add_prompt_template()) {
-    prompt << kStartHeader << "system" << kEndHeader << "\n";
+    prompt << LlamaFormatter::kStartHeader << "system"
+           << LlamaFormatter::kEndHeader << "\n";
   }
 
   // Append system instruction.
@@ -86,7 +83,7 @@ absl::StatusOr<std::string> FormatLlamaSystemMessage(
     prompt << "]\n";
   }
   if (formatter_options.add_prompt_template()) {
-    prompt << kEndTurn;
+    prompt << LlamaFormatter::kEndTurn;
   } else {
     prompt << "\n";
   }
@@ -97,7 +94,8 @@ absl::StatusOr<std::string> FormatLlamaContent(
     const Content& content, const ModelFormatterOptions& formatter_options) {
   std::stringstream prompt;
   if (formatter_options.add_prompt_template()) {
-    prompt << kStartHeader << content.role() << kEndHeader << "\n";
+    prompt << LlamaFormatter::kStartHeader << content.role()
+           << LlamaFormatter::kEndHeader << "\n";
   }
   std::vector<const FunctionCall*> function_calls;
 
@@ -140,14 +138,15 @@ absl::StatusOr<std::string> FormatLlamaContent(
     prompt << "]\n";
   }
   if (formatter_options.add_prompt_template()) {
-    prompt << kEndTurn;
+    prompt << LlamaFormatter::kEndTurn;
   }
   return prompt.str();
 }
 
 std::string StartLlamaTurn(const ModelFormatterOptions& formatter_options) {
   return formatter_options.add_prompt_template()
-             ? absl::StrCat(kStartHeader, "assistant", kEndHeader)
+             ? absl::StrCat(LlamaFormatter::kStartHeader, "assistant",
+                            LlamaFormatter::kEndHeader)
              : "";
 }
 
@@ -186,8 +185,8 @@ absl::StatusOr<std::string> FormatLlamaRequest(
 
 absl::StatusOr<GenerateContentResponse> ParseLlamaResponse(
     absl::string_view response_str) {
-  response_str =
-      absl::StripAsciiWhitespace(absl::StripSuffix(response_str, kEndTurn));
+  response_str = absl::StripAsciiWhitespace(
+      absl::StripSuffix(response_str, LlamaFormatter::kEndTurn));
   TextAndFunctionCalls text_and_function_calls =
       // Only allow code fence to start from the beginning of the line.
       ParseTextAndFunctionCallsString(response_str,
@@ -218,4 +217,34 @@ absl::StatusOr<GenerateContentResponse> ParseLlamaResponse(
   }
   return response;
 }
+
+absl::StatusOr<std::string> LlamaFormatter::FormatSystemMessage(
+    const Content& system_instruction, absl::Span<const Tool* const> tools) {
+  return FormatLlamaSystemMessage(system_instruction, tools,
+                                  formatter_options_);
+}
+
+absl::StatusOr<std::string> LlamaFormatter::FormatContent(
+    const Content& content) {
+  return FormatLlamaContent(content, formatter_options_);
+}
+
+std::string LlamaFormatter::StartModelTurn() {
+  return StartLlamaTurn(formatter_options_);
+}
+
+std::string LlamaFormatter::CodeFenceStart() { return "["; }
+
+std::string LlamaFormatter::CodeFenceEnd() { return "]"; }
+
+absl::StatusOr<std::string> LlamaFormatter::FormatRequest(
+    const GenerateContentRequest& request) {
+  return FormatLlamaRequest(request, formatter_options_);
+}
+
+absl::StatusOr<GenerateContentResponse> LlamaFormatter::ParseResponse(
+    absl::string_view response) {
+  return ParseLlamaResponse(response);
+}
+
 }  // namespace odml::generativeai

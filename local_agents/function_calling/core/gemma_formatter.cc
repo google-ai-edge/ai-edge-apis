@@ -41,15 +41,10 @@ using ::odml::genai_modules::core::proto::GenerateContentRequest;
 using ::odml::genai_modules::core::proto::GenerateContentResponse;
 using ::odml::genai_modules::core::proto::Tool;
 
-constexpr absl::string_view kStartTurn = "<start_of_turn>";
-constexpr absl::string_view kEndTurn = "<end_of_turn>";
-constexpr absl::string_view kToolCode = "```tool_code";
-constexpr absl::string_view kToolOutputs = "```tool_outputs";
-
 absl::StatusOr<std::string> FormatFunctionResponse(
     const FunctionResponse& function_response) {
   std::stringstream ss;
-  ss << kToolOutputs << "\n";
+  ss << GemmaFormatter::kToolOutputs << "\n";
   ss << FormatStructAsPython(function_response.response());
   ss << "\n```";
   return ss.str();
@@ -63,7 +58,7 @@ absl::StatusOr<std::string> FormatGemmaSystemMessage(
     const ModelFormatterOptions& options) {
   std::stringstream ss;
   if (options.add_prompt_template()) {
-    ss << kStartTurn << "system\n";
+    ss << GemmaFormatter::kStartTurn << "system\n";
   }
 
   // Append system instruction.
@@ -88,7 +83,7 @@ absl::StatusOr<std::string> FormatGemmaSystemMessage(
     ss << "]\n";
   }
   if (options.add_prompt_template()) {
-    ss << kEndTurn;
+    ss << GemmaFormatter::kEndTurn;
   }
   ss << "\n";
   return ss.str();
@@ -98,7 +93,7 @@ absl::StatusOr<std::string> FormatGemmaContent(
     const Content& content, const ModelFormatterOptions& options) {
   std::stringstream prompt;
   if (options.add_prompt_template()) {
-    prompt << kStartTurn << content.role() << "\n";
+    prompt << GemmaFormatter::kStartTurn << content.role() << "\n";
   }
   std::vector<const FunctionCall*> function_calls;
 
@@ -123,7 +118,7 @@ absl::StatusOr<std::string> FormatGemmaContent(
 
   // Add function calls to the end.
   if (!function_calls.empty()) {
-    prompt << kToolCode << "\n[";
+    prompt << GemmaFormatter::kToolCodeStart << "\n[";
     int count = 0;
     for (const auto& function_call : function_calls) {
       absl::StatusOr<std::string> function_call_str =
@@ -138,18 +133,19 @@ absl::StatusOr<std::string> FormatGemmaContent(
         prompt << ",";
       }
     }
-    prompt << "]\n```";
+    prompt << "]\n" << GemmaFormatter::kToolCodeEnd;
   }
   if (options.add_prompt_template()) {
-    prompt << kEndTurn;
+    prompt << GemmaFormatter::kEndTurn;
   }
   prompt << "\n";
   return prompt.str();
 }
 
 std::string StartGemmaTurn(const ModelFormatterOptions& options) {
-  return options.add_prompt_template() ? absl::StrCat(kStartTurn, "model\n")
-                                       : "";
+  return options.add_prompt_template()
+             ? absl::StrCat(GemmaFormatter::kStartTurn, "model\n")
+             : "";
 }
 
 absl::StatusOr<std::string> FormatGemmaRequest(
@@ -189,8 +185,42 @@ absl::StatusOr<std::string> FormatGemmaRequest(
 
 absl::StatusOr<GenerateContentResponse> ParseGemmaResponse(
     absl::string_view response_str) {
-  return ParseResponse(response_str, absl::StrCat(kToolCode, "\n"), "\n```",
+  return ParseResponse(response_str,
+                       absl::StrCat(GemmaFormatter::kToolCodeStart, "\n"),
+                       absl::StrCat("\n", GemmaFormatter::kToolCodeEnd),
                        "model", SyntaxType::kPython);
+}
+
+absl::StatusOr<std::string> GemmaFormatter::FormatSystemMessage(
+    const Content& system_instruction, absl::Span<const Tool* const> tools) {
+  return FormatGemmaSystemMessage(system_instruction, tools, options_);
+}
+
+absl::StatusOr<std::string> GemmaFormatter::FormatContent(
+    const Content& content) {
+  return FormatGemmaContent(content, options_);
+}
+
+std::string GemmaFormatter::StartModelTurn() {
+  return StartGemmaTurn(options_);
+}
+
+std::string GemmaFormatter::CodeFenceStart() {
+  return absl::StrCat(GemmaFormatter::kToolCodeStart, "\n");
+}
+
+std::string GemmaFormatter::CodeFenceEnd() {
+  return absl::StrCat("\n", GemmaFormatter::kToolCodeEnd);
+}
+
+absl::StatusOr<std::string> GemmaFormatter::FormatRequest(
+    const GenerateContentRequest& request) {
+  return FormatGemmaRequest(request, options_);
+}
+
+absl::StatusOr<GenerateContentResponse> GemmaFormatter::ParseResponse(
+    absl::string_view response) {
+  return ParseGemmaResponse(response);
 }
 
 }  // namespace odml::generativeai

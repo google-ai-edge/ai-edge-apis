@@ -39,11 +39,23 @@ cc_library(
 )
 
 cc_library(
+    name = "model_formatter",
+    hdrs = ["model_formatter.h"],
+    deps = [
+        "//local_agents/core/proto:generative_service_cc_proto",
+        "@abseil-cpp//absl/status:statusor",
+        "@abseil-cpp//absl/strings:string_view",
+        "@abseil-cpp//absl/types:span",
+    ],
+)
+
+cc_library(
     name = "gemma_formatter",
     srcs = ["gemma_formatter.cc"],
     hdrs = ["gemma_formatter.h"],
     deps = [
         ":format_utils",
+        ":model_formatter",
         "//local_agents/core/proto:content_cc_proto",
         "//local_agents/core/proto:generative_service_cc_proto",
         "//local_agents/function_calling/core/antlr:parser_utils",
@@ -64,6 +76,7 @@ cc_library(
     hdrs = ["llama_formatter.h"],
     deps = [
         ":format_utils",
+        ":model_formatter",
         "//local_agents/core/proto:content_cc_proto",
         "//local_agents/core/proto:generative_service_cc_proto",
         "//local_agents/function_calling/core/antlr:parser_utils",
