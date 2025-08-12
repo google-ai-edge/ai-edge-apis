@@ -110,3 +110,17 @@ cc_library(
         "@re2",
     ],
 )
+
+cc_library(
+    name = "streaming",
+    srcs = ["streaming.cc"],
+    hdrs = ["streaming.h"],
+    deps = [
+        ":model_formatter",
+        "//local_agents/core/proto:content_cc_proto",
+        "//local_agents/core/proto:generative_service_cc_proto",
+        "@abseil-cpp//absl/status",
+        "@abseil-cpp//absl/status:statusor",
+        "@abseil-cpp//absl/strings:string_view",
+    ],
+)
