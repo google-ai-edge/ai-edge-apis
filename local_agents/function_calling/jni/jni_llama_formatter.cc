@@ -31,7 +31,7 @@ using odml::generativeai::ModelFormatterOptions;
 extern "C" {
 JNIEXPORT jstring JNICALL
 Java_com_google_ai_edge_localagents_fc_LlamaFormatter_nativeFormatSystemMessage(
-    JNIEnv *env, jclass ignored, jbyteArray request_bytes,
+    JNIEnv* env, jclass ignored, jbyteArray request_bytes,
     jbyteArray options_bytes) {
   GenerateContentRequest request;
   if (!ParseProto(env, request_bytes, request)) {
@@ -54,7 +54,7 @@ Java_com_google_ai_edge_localagents_fc_LlamaFormatter_nativeFormatSystemMessage(
 
 JNIEXPORT jstring JNICALL
 Java_com_google_ai_edge_localagents_fc_LlamaFormatter_nativeFormatContent(
-    JNIEnv *env, jclass ignored, jbyteArray content_bytes,
+    JNIEnv* env, jclass ignored, jbyteArray content_bytes,
     jbyteArray options_bytes) {
   Content content;
   if (!ParseProto(env, content_bytes, content)) {
@@ -75,7 +75,7 @@ Java_com_google_ai_edge_localagents_fc_LlamaFormatter_nativeFormatContent(
 
 JNIEXPORT jstring JNICALL
 Java_com_google_ai_edge_localagents_fc_LlamaFormatter_nativeStartModelTurn(
-    JNIEnv *env, jclass ignored, jbyteArray options_bytes) {
+    JNIEnv* env, jclass ignored, jbyteArray options_bytes) {
   ModelFormatterOptions options;
   if (!ParseProto(env, options_bytes, options)) {
     return nullptr;
@@ -85,7 +85,7 @@ Java_com_google_ai_edge_localagents_fc_LlamaFormatter_nativeStartModelTurn(
 
 JNIEXPORT jstring JNICALL
 Java_com_google_ai_edge_localagents_fc_LlamaFormatter_nativeFormatRequest(
-    JNIEnv *env, jclass ignored, jbyteArray request_bytes,
+    JNIEnv* env, jclass ignored, jbyteArray request_bytes,
     jbyteArray options_bytes) {
   GenerateContentRequest request;
   if (!ParseProto(env, request_bytes, request)) {
@@ -105,7 +105,7 @@ Java_com_google_ai_edge_localagents_fc_LlamaFormatter_nativeFormatRequest(
 
 JNIEXPORT jbyteArray JNICALL
 Java_com_google_ai_edge_localagents_fc_LlamaFormatter_nativeParseResponse(
-    JNIEnv *env, jclass ignored, jstring output) {
+    JNIEnv* env, jclass ignored, jstring output) {
   auto response = odml::generativeai::ParseLlamaResponse(
       env->GetStringUTFChars(output, nullptr));
   if (!response.ok()) {

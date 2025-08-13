@@ -35,32 +35,32 @@ class ModelFormatter {
   // sent to the inference backend.
   virtual absl::StatusOr<std::string> FormatSystemMessage(
       const odml::genai_modules::core::proto::Content& system_instruction,
-      absl::Span<const odml::genai_modules::core::proto::Tool* const>
-          tools) = 0;
+      absl::Span<const odml::genai_modules::core::proto::Tool* const> tools)
+      const = 0;
 
   // Formats a Content object into a string that can be sent to a the inference
   // backend.
   virtual absl::StatusOr<std::string> FormatContent(
-      const odml::genai_modules::core::proto::Content& content) = 0;
+      const odml::genai_modules::core::proto::Content& content) const = 0;
 
   // Returns a string that indicates the start of a model turn.
-  virtual std::string StartModelTurn() = 0;
+  virtual std::string StartModelTurn() const = 0;
 
   // Returns the strings that indicate when a tool call starts and ends.
-  virtual std::string CodeFenceStart() = 0;
-  virtual std::string CodeFenceEnd() = 0;
+  virtual std::string CodeFenceStart() const = 0;
+  virtual std::string CodeFenceEnd() const = 0;
 
   // Formats a GenerateContentRequest into a string that can be sent to a
   // Generative AI model.
   virtual absl::StatusOr<std::string> FormatRequest(
-      const odml::genai_modules::core::proto::GenerateContentRequest&
-          request) = 0;
+      const odml::genai_modules::core::proto::GenerateContentRequest& request)
+      const = 0;
 
   // Parses a response string from a Generative AI model into a
   // GenerateContentResponse.
   virtual absl::StatusOr<
       odml::genai_modules::core::proto::GenerateContentResponse>
-  ParseResponse(absl::string_view response) = 0;
+  ParseResponse(absl::string_view response) const = 0;
 };
 
 }  // namespace generativeai

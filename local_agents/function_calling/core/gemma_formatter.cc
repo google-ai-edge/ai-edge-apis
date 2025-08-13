@@ -192,34 +192,35 @@ absl::StatusOr<GenerateContentResponse> ParseGemmaResponse(
 }
 
 absl::StatusOr<std::string> GemmaFormatter::FormatSystemMessage(
-    const Content& system_instruction, absl::Span<const Tool* const> tools) {
+    const Content& system_instruction,
+    absl::Span<const Tool* const> tools) const {
   return FormatGemmaSystemMessage(system_instruction, tools, options_);
 }
 
 absl::StatusOr<std::string> GemmaFormatter::FormatContent(
-    const Content& content) {
+    const Content& content) const {
   return FormatGemmaContent(content, options_);
 }
 
-std::string GemmaFormatter::StartModelTurn() {
+std::string GemmaFormatter::StartModelTurn() const {
   return StartGemmaTurn(options_);
 }
 
-std::string GemmaFormatter::CodeFenceStart() {
+std::string GemmaFormatter::CodeFenceStart() const {
   return absl::StrCat(GemmaFormatter::kToolCodeStart, "\n");
 }
 
-std::string GemmaFormatter::CodeFenceEnd() {
+std::string GemmaFormatter::CodeFenceEnd() const {
   return absl::StrCat("\n", GemmaFormatter::kToolCodeEnd);
 }
 
 absl::StatusOr<std::string> GemmaFormatter::FormatRequest(
-    const GenerateContentRequest& request) {
+    const GenerateContentRequest& request) const {
   return FormatGemmaRequest(request, options_);
 }
 
 absl::StatusOr<GenerateContentResponse> GemmaFormatter::ParseResponse(
-    absl::string_view response) {
+    absl::string_view response) const {
   return ParseGemmaResponse(response);
 }
 

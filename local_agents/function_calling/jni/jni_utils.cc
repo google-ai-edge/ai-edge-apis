@@ -25,29 +25,29 @@
 
 // Helper function to parse protos from jbyteArray
 template <typename ProtoT>
-bool ParseProto(JNIEnv *env, jbyteArray proto_bytes, ProtoT &proto) {
+bool ParseProto(JNIEnv* env, jbyteArray proto_bytes, ProtoT& proto) {
   const int size = env->GetArrayLength(proto_bytes);
-  void *ptr = env->GetPrimitiveArrayCritical(proto_bytes, nullptr);
+  void* ptr = env->GetPrimitiveArrayCritical(proto_bytes, nullptr);
   if (ptr == nullptr) {
     return false;  // Failed to get array critical section
   }
-  bool parsed_ok = proto.ParseFromArray(static_cast<char *>(ptr), size);
+  bool parsed_ok = proto.ParseFromArray(static_cast<char*>(ptr), size);
   env->ReleasePrimitiveArrayCritical(proto_bytes, ptr, JNI_ABORT);
   return parsed_ok;
 }
 
 template <typename ProtoT>
-jbyteArray SerializeProto(JNIEnv *env, const ProtoT &proto) {
+jbyteArray SerializeProto(JNIEnv* env, const ProtoT& proto) {
   const int byte_size = proto.ByteSizeLong();
   ScopedLocalRef<jbyteArray> array(env->NewByteArray(byte_size), env);
   if (!array) {
     return ScopedLocalRef<jbyteArray>(nullptr, env).release();
   }
-  void *ptr = env->GetPrimitiveArrayCritical(array.get(), nullptr);
+  void* ptr = env->GetPrimitiveArrayCritical(array.get(), nullptr);
   if (!ptr) {
     return ScopedLocalRef<jbyteArray>(nullptr, env).release();
   }
-  proto.SerializeWithCachedSizesToArray(static_cast<uint8_t *>(ptr));
+  proto.SerializeWithCachedSizesToArray(static_cast<uint8_t*>(ptr));
   // NOMUTANTS -- Array must be released.
   env->ReleasePrimitiveArrayCritical(array.get(), ptr, 0);
   return array.release();
@@ -55,21 +55,21 @@ jbyteArray SerializeProto(JNIEnv *env, const ProtoT &proto) {
 
 template bool
 ParseProto<::odml::genai_modules::core::proto::GenerateContentRequest>(
-    JNIEnv *env, jbyteArray proto_bytes,
-    ::odml::genai_modules::core::proto::GenerateContentRequest &request);
+    JNIEnv* env, jbyteArray proto_bytes,
+    ::odml::genai_modules::core::proto::GenerateContentRequest& request);
 
 template bool ParseProto<::odml::genai_modules::core::proto::Content>(
-    JNIEnv *env, jbyteArray proto_bytes,
-    ::odml::genai_modules::core::proto::Content &proto);
+    JNIEnv* env, jbyteArray proto_bytes,
+    ::odml::genai_modules::core::proto::Content& proto);
 
 template bool ParseProto<::odml::generativeai::ModelFormatterOptions>(
-    JNIEnv *env, jbyteArray proto_bytes,
-    ::odml::generativeai::ModelFormatterOptions &options);
+    JNIEnv* env, jbyteArray proto_bytes,
+    ::odml::generativeai::ModelFormatterOptions& options);
 
 template jbyteArray
 SerializeProto<::odml::genai_modules::core::proto::GenerateContentResponse>(
-    JNIEnv *env,
-    const ::odml::genai_modules::core::proto::GenerateContentResponse &proto);
+    JNIEnv* env,
+    const ::odml::genai_modules::core::proto::GenerateContentResponse& proto);
 
 template jbyteArray SerializeProto<::odml::genai_modules::core::proto::Tool>(
-    JNIEnv *env, const ::odml::genai_modules::core::proto::Tool &proto);
+    JNIEnv* env, const ::odml::genai_modules::core::proto::Tool& proto);

@@ -71,30 +71,30 @@ class GemmaFormatter : public ModelFormatter {
   absl::StatusOr<std::string> FormatSystemMessage(
       const odml::genai_modules::core::proto::Content& system_instruction,
       absl::Span<const odml::genai_modules::core::proto::Tool* const> tools)
-      override;
+      const override;
 
   // Formats a Content object into a string that can be sent to a the inference
   // backend.
   absl::StatusOr<std::string> FormatContent(
-      const odml::genai_modules::core::proto::Content& content) override;
+      const odml::genai_modules::core::proto::Content& content) const override;
 
   // Returns a string that indicates the start of a model turn.
-  std::string StartModelTurn() override;
+  std::string StartModelTurn() const override;
 
   // Returns the strings that indicate when a tool call starts and ends.
-  std::string CodeFenceStart() override;
-  std::string CodeFenceEnd() override;
+  std::string CodeFenceStart() const override;
+  std::string CodeFenceEnd() const override;
 
   // Formats a GenerateContentRequest into a string that can be sent to the
   // Gemma model.
   absl::StatusOr<std::string> FormatRequest(
       const odml::genai_modules::core::proto::GenerateContentRequest& request)
-      override;
+      const override;
 
   // Parses the string output from the Gemma model into a
   // GenerateContentResponse.
   absl::StatusOr<odml::genai_modules::core::proto::GenerateContentResponse>
-  ParseResponse(absl::string_view response_str) override;
+  ParseResponse(absl::string_view response_str) const override;
 
  private:
   odml::generativeai::ModelFormatterOptions options_;

@@ -35,7 +35,7 @@ using odml::generativeai::ModelFormatterOptions;
 extern "C" {
 JNIEXPORT jstring JNICALL
 Java_com_google_ai_edge_localagents_fc_HammerFormatter_nativeFormatSystemMessage(
-    JNIEnv *env, jclass ignored, jbyteArray request_bytes,
+    JNIEnv* env, jclass ignored, jbyteArray request_bytes,
     jbyteArray options_bytes) {
   GenerateContentRequest request;
   if (!ParseProto(env, request_bytes, request)) {
@@ -59,7 +59,7 @@ Java_com_google_ai_edge_localagents_fc_HammerFormatter_nativeFormatSystemMessage
 
 JNIEXPORT jstring JNICALL
 Java_com_google_ai_edge_localagents_fc_HammerFormatter_nativeFormatContent(
-    JNIEnv *env, jclass ignored, jbyteArray content_bytes,
+    JNIEnv* env, jclass ignored, jbyteArray content_bytes,
     jbyteArray options_bytes) {
   Content content;
   if (!ParseProto(env, content_bytes, content)) {
@@ -81,7 +81,7 @@ Java_com_google_ai_edge_localagents_fc_HammerFormatter_nativeFormatContent(
 
 JNIEXPORT jstring JNICALL
 Java_com_google_ai_edge_localagents_fc_HammerFormatter_nativeStartModelTurn(
-    JNIEnv *env, jclass ignored, jbyteArray options_bytes) {
+    JNIEnv* env, jclass ignored, jbyteArray options_bytes) {
   ModelFormatterOptions options;
   if (!ParseProto(env, options_bytes, options)) {
     return nullptr;
@@ -92,7 +92,7 @@ Java_com_google_ai_edge_localagents_fc_HammerFormatter_nativeStartModelTurn(
 
 JNIEXPORT jstring JNICALL
 Java_com_google_ai_edge_localagents_fc_HammerFormatter_nativeFormatRequest(
-    JNIEnv *env, jclass ignored, jbyteArray request_bytes,
+    JNIEnv* env, jclass ignored, jbyteArray request_bytes,
     jbyteArray options_bytes) {
   GenerateContentRequest request;
   if (!ParseProto(env, request_bytes, request)) {
@@ -112,7 +112,7 @@ Java_com_google_ai_edge_localagents_fc_HammerFormatter_nativeFormatRequest(
 
 JNIEXPORT jbyteArray JNICALL
 Java_com_google_ai_edge_localagents_fc_HammerFormatter_nativeParseResponse(
-    JNIEnv *env, jclass ignored, jstring output, jbyteArray options_bytes) {
+    JNIEnv* env, jclass ignored, jstring output, jbyteArray options_bytes) {
   ModelFormatterOptions options;
   if (!ParseProto(env, options_bytes, options)) {
     return nullptr;

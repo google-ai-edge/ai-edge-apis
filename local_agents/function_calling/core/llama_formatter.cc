@@ -219,31 +219,32 @@ absl::StatusOr<GenerateContentResponse> ParseLlamaResponse(
 }
 
 absl::StatusOr<std::string> LlamaFormatter::FormatSystemMessage(
-    const Content& system_instruction, absl::Span<const Tool* const> tools) {
+    const Content& system_instruction,
+    absl::Span<const Tool* const> tools) const {
   return FormatLlamaSystemMessage(system_instruction, tools,
                                   formatter_options_);
 }
 
 absl::StatusOr<std::string> LlamaFormatter::FormatContent(
-    const Content& content) {
+    const Content& content) const {
   return FormatLlamaContent(content, formatter_options_);
 }
 
-std::string LlamaFormatter::StartModelTurn() {
+std::string LlamaFormatter::StartModelTurn() const {
   return StartLlamaTurn(formatter_options_);
 }
 
-std::string LlamaFormatter::CodeFenceStart() { return "["; }
+std::string LlamaFormatter::CodeFenceStart() const { return "["; }
 
-std::string LlamaFormatter::CodeFenceEnd() { return "]"; }
+std::string LlamaFormatter::CodeFenceEnd() const { return "]"; }
 
 absl::StatusOr<std::string> LlamaFormatter::FormatRequest(
-    const GenerateContentRequest& request) {
+    const GenerateContentRequest& request) const {
   return FormatLlamaRequest(request, formatter_options_);
 }
 
 absl::StatusOr<GenerateContentResponse> LlamaFormatter::ParseResponse(
-    absl::string_view response) {
+    absl::string_view response) const {
   return ParseLlamaResponse(response);
 }
 
