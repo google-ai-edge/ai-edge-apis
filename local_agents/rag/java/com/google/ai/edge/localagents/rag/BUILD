@@ -14,6 +14,8 @@
 
 load("@ai_edge_apis//local_agents/rag/maven:maven_repository.bzl", "android_jni_aar", "maven_artifact")
 load("@rules_android//android:rules.bzl", "android_library")
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+load("@rules_cc//cc:cc_library.bzl", "cc_library")
 load("//third_party:ai_edge_files.bzl", "ai_edge_files")
 
 package(default_visibility = [
