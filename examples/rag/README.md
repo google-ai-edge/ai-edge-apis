@@ -27,7 +27,7 @@ Steps to run the sample app:
 1) Connect an Android phone to your workstation. We currently target higher end devices such as
    Pixel 8, Pixel 9, S23 and S24.
 
-2) Download [Gemma3]https://huggingface.co/litert-community/Gemma3-1B-IT/resolve/main/gemma3-1b-it-int4.task?download=true) to your workstation and push to device:
+2) Download [Gemma3](https://huggingface.co/litert-community/Gemma3-1B-IT/resolve/main/gemma3-1b-it-int4.task?download=true) to your workstation and push to device:
 
 ```
 adb push /tmp/gemma3-1b-it-int4.task /data/local/tmp/gemma3-1b-it-int4.task
