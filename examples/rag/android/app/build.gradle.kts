@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
@@ -71,8 +72,8 @@ dependencies {
     implementation("com.google.guava:guava:33.3.1-android")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.9.0")
 
-    implementation("com.google.ai.edge.localagents:localagents-rag:0.1.0")
-    implementation("com.google.mediapipe:tasks-genai:0.10.22")
+    implementation("com.google.ai.edge.localagents:localagents-rag:0.3.0")
+    implementation("com.google.mediapipe:tasks-genai:0.10.27")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

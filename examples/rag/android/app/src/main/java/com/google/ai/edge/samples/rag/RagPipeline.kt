@@ -8,7 +8,7 @@ import com.google.ai.edge.localagents.rag.memory.DefaultSemanticTextMemory
 import com.google.ai.edge.localagents.rag.memory.SqliteVectorStore
 import com.google.ai.edge.localagents.rag.models.AsyncProgressListener
 import com.google.ai.edge.localagents.rag.models.Embedder
-import com.google.ai.edge.localagents.rag.models.GeckoEmbeddingModel
+import com.google.ai.edge.localagents.rag.models.GemmaEmbeddingModel
 import com.google.ai.edge.localagents.rag.models.GeminiEmbedder
 import com.google.ai.edge.localagents.rag.models.LanguageModelResponse
 import com.google.ai.edge.localagents.rag.models.MediaPipeLlmBackend
@@ -46,9 +46,9 @@ class RagPipeline(private val application: Application) {
     )
 
   private val embedder: Embedder<String> = if (COMPUTE_EMBEDDINGS_LOCALLY) {
-    GeckoEmbeddingModel(
-      GECKO_MODEL_PATH,
-      Optional.of(TOKENIZER_MODEL_PATH),
+    GemmaEmbeddingModel(
+      EMBEDDING_GEMMA_MODEL_PATH,
+      TOKENIZER_MODEL_PATH,
       USE_GPU_FOR_EMBEDDINGS,
     )
   } else {
@@ -140,7 +140,7 @@ class RagPipeline(private val application: Application) {
 
     private const val GEMMA_MODEL_PATH = "/data/local/tmp/gemma3-1b-it-int4.task"
     private const val TOKENIZER_MODEL_PATH = "/data/local/tmp/sentencepiece.model"
-    private const val GECKO_MODEL_PATH = "/data/local/tmp/gecko.tflite"
+    private const val EMBEDDING_GEMMA_MODEL_PATH = "/data/local/tmp/embeddinggemma-300m_seq256_mixed-precision.tflite"
     private const val GEMINI_EMBEDDING_MODEL = "models/text-embedding-004"
     private const val GEMINI_API_KEY = "..."
 
