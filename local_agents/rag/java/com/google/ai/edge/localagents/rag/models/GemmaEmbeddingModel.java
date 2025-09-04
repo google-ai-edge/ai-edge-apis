@@ -21,43 +21,47 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-/** The on-device Gecko embedding model. The embedding dimension for Gecko model is 768. */
-public final class GeckoEmbeddingModel implements Embedder<String> {
+/** The on-device Gemma embedding model. */
+public final class GemmaEmbeddingModel implements Embedder<String> {
   public static final String TITLE_KEY = "title";
-  private final long modelHandle;
+  private long modelHandle;
   private final Executor workerExecutor;
+  private final ListenableFuture<Void> initializationFuture;
 
   static {
-    System.loadLibrary("gecko_embedding_model_jni");
+    System.loadLibrary("gemma_embedding_model_jni");
   }
 
   /**
-   * Creates an on-device Gecko embedding model.
+   * Creates an on-device Gemma embedding model.
    *
    * @param embeddingModelPath The path of the embedding model.
-   * @param sentencePieceModelPath (Optional) Path to the sentence piece model. If not provided the
-   *     code assumes the tokenizer is contained in the model given by `embeddingModelPath`
+   * @param sentencePieceModelPath Path to the sentence piece model.
    * @param useGpu If set to True, will use the GPU, otherwise will use the CPU for inference.
    */
-  public GeckoEmbeddingModel(
-      String embeddingModelPath, Optional<String> sentencePieceModelPath, boolean useGpu) {
+  public GemmaEmbeddingModel(
+      String embeddingModelPath, String sentencePieceModelPath, boolean useGpu) {
     validatePath(embeddingModelPath);
-    if (sentencePieceModelPath.isPresent()) {
-      validatePath(sentencePieceModelPath.get());
-    }
-    modelHandle =
-        nativeInitializeGeckoEmbeddingModel(
-            embeddingModelPath, sentencePieceModelPath.orElse(""), useGpu);
+    validatePath(sentencePieceModelPath);
+
     workerExecutor =
         Executors.newSingleThreadExecutor(
             new ThreadFactoryBuilder()
-                .setNameFormat("gecko-embedder-pool-%d")
+                .setNameFormat("gemma-embedder-pool-%d")
                 .setPriority(Thread.NORM_PRIORITY)
                 .build());
+
+    initializationFuture =
+        Futures.submit(
+            () -> {
+              modelHandle =
+                  nativeInitializeGemmaEmbeddingModel(
+                      embeddingModelPath, sentencePieceModelPath, useGpu);
+            },
+            workerExecutor);
   }
 
   @Override
@@ -131,7 +135,7 @@ public final class GeckoEmbeddingModel implements Embedder<String> {
     return builder.build().toByteArray();
   }
 
-  private static native long nativeInitializeGeckoEmbeddingModel(
+  private static native long nativeInitializeGemmaEmbeddingModel(
       String embeddingModelPath, String sentencePieceModelPath, boolean useGpu);
 
   private static native List<Float> nativeGetEmbeddingsProto(long modelHandle, byte[] request);

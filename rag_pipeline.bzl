@@ -12,36 +12,48 @@ def rag_pipeline_files():
 
     http_file(
         name = "ai_edge_apis_rag_pipeline_x86_64_libtext_chunker_jni_so",
-        sha256 = "6c8420f7bb5347d002982332f6d649904f600baabe0317bc7d4641da1898741d",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/x86_64/libtext_chunker_jni.so?generation=1754586489020324"],
+        sha256 = "cf4a75cff75434efdff7df1a6dfb1a48f1d15a0e9c3f418ccb95039da345f846",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/x86_64/libtext_chunker_jni.so?generation=1756928525133681"],
     )
 
     http_file(
         name = "ai_edge_apis_rag_pipeline_android_arm64_libtext_chunker_jni_so",
-        sha256 = "f047ccffebfc04a2ba878e821e7e99bb19b15c02533c25a8d1b9ecfe0120b9e9",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/android_arm64/libtext_chunker_jni.so?generation=1754586489410465"],
+        sha256 = "7b539c8cbc0aa71eba8cb2cbe417b88b4f0c2bd09a686d1abca5955b010e4e95",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/android_arm64/libtext_chunker_jni.so?generation=1756928525133753"],
     )
 
     http_file(
         name = "ai_edge_apis_rag_pipeline_x86_64_libsqlite_vector_store_jni_so",
-        sha256 = "2498f252ca3800ece6f462906ccecbd37cff317f75ffa704b7828ee9edf6ebe1",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/x86_64/libsqlite_vector_store_jni.so?generation=1754586489444986"],
+        sha256 = "2f0e4048764de76c67d88a73580d9dbc4d1d0beab54688a58c7a596011d1c71d",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/x86_64/libsqlite_vector_store_jni.so?generation=1756928525304337"],
     )
 
     http_file(
         name = "ai_edge_apis_rag_pipeline_android_arm64_libsqlite_vector_store_jni_so",
-        sha256 = "e1e30444e1194cfa9e20913309d8e80810b24ecd2eb3f922330304734ad348c0",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/android_arm64/libsqlite_vector_store_jni.so?generation=1754586489386964"],
+        sha256 = "7267b63291dc355b3fc9642a38bcab58fdb98c4d71a3ec740066e0663ddcc917",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/android_arm64/libsqlite_vector_store_jni.so?generation=1756928525332537"],
     )
 
     http_file(
         name = "ai_edge_apis_rag_pipeline_x86_64_libgecko_embedding_model_jni_so",
-        sha256 = "c87bcd87d44f8839afc9028008f5dbc7e3a78053183ba9ef1513468d490440f0",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/x86_64/libgecko_embedding_model_jni.so?generation=1754586489684884"],
+        sha256 = "b9a2138029d35699817cbfe64a78a50b8a50cdb4e2cb21dd242080beae81fc85",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/x86_64/libgecko_embedding_model_jni.so?generation=1756928525579655"],
     )
 
     http_file(
         name = "ai_edge_apis_rag_pipeline_android_arm64_libgecko_embedding_model_jni_so",
-        sha256 = "7beca7a000c2751f4ee80a7cc37524532a09cb3e4fa5cf98f2e7afe2622dee27",
-        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/android_arm64/libgecko_embedding_model_jni.so?generation=1754586489531355"],
+        sha256 = "c7776182625d8f3d1760c6f3a1b6a25bc5c47ceff51f121fc5e5b1a85c58f9e8",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/android_arm64/libgecko_embedding_model_jni.so?generation=1756928525481042"],
+    )
+
+    http_file(
+        name = "ai_edge_apis_rag_pipeline_x86_64_libgemma_embedding_model_jni_so",
+        sha256 = "03ab04cd8e781a7eaf339c9c70fcc36463abe679123768fc28e4bad67c3377a4",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/x86_64/libgemma_embedding_model_jni.so?generation=1756928525942414"],
+    )
+
+    http_file(
+        name = "ai_edge_apis_rag_pipeline_android_arm64_libgemma_embedding_model_jni_so",
+        sha256 = "42e226496bfe28bf94848dba5796a7bd0ed70086423cdfe1610fac8d5482e32c",
+        urls = ["https://storage.googleapis.com/mediapipe-assets/rag_pipeline/android_arm64/libgemma_embedding_model_jni.so?generation=1756928525479325"],
     )

@@ -34,6 +34,7 @@ filegroup(
         "EmbeddingRequest.java",
         "GeckoEmbeddingModel.java",
         "GeminiEmbedder.java",
+        "GemmaEmbeddingModel.java",
         "LanguageModel.java",
         "LanguageModelRequest.java",
         "LanguageModelResponse.java",
@@ -63,6 +64,17 @@ android_library(
     ],
     deps = [
         ":entities",
+        "@maven//:com_google_guava_guava",
+    ],
+)
+
+android_library(
+    name = "gemma_embedding_model",
+    srcs = ["GemmaEmbeddingModel.java"],
+    deps = [
+        ":embedder",
+        ":entities",
+        "@ai_edge_apis//local_agents/rag/core/protos:embedding_models_java_proto_lite",
         "@maven//:com_google_guava_guava",
     ],
 )

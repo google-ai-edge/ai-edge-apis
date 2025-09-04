@@ -25,9 +25,11 @@ package(default_visibility = [
 ai_edge_files(
     srcs = [
         "rag_pipeline_android_arm64_libgecko_embedding_model_jni.so",
+        "rag_pipeline_android_arm64_libgemma_embedding_model_jni.so",
         "rag_pipeline_android_arm64_libsqlite_vector_store_jni.so",
         "rag_pipeline_android_arm64_libtext_chunker_jni.so",
         "rag_pipeline_x86_64_libgecko_embedding_model_jni.so",
+        "rag_pipeline_x86_64_libgemma_embedding_model_jni.so",
         "rag_pipeline_x86_64_libsqlite_vector_store_jni.so",
         "rag_pipeline_x86_64_libtext_chunker_jni.so",
     ],
@@ -74,6 +76,15 @@ cc_library(
 )
 
 cc_library(
+    name = "libgemma_embedding_model_jni_lib",
+    srcs = select({
+        "//:android_arm64": [":rag_pipeline_android_arm64_libgemma_embedding_model_jni.so"],
+        "//conditions:default": [":rag_pipeline_x86_64_libgemma_embedding_model_jni.so"],
+    }),
+    alwayslink = 1,
+)
+
+cc_library(
     name = "libsqlite_vector_store_jni_lib",
     srcs = select({
         "//:android_arm64": [":rag_pipeline_android_arm64_libsqlite_vector_store_jni.so"],
@@ -95,6 +106,7 @@ android_jni_aar(
     name = "rag_jni_aar",
     native_libraries = [
         ":libgecko_embedding_model_jni_lib",
+        ":libgemma_embedding_model_jni_lib",
         ":libsqlite_vector_store_jni_lib",
         ":libtext_chunker_jni_lib",
     ],

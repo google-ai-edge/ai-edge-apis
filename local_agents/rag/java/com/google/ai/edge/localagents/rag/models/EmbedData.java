@@ -21,7 +21,6 @@ import java.util.Map;
 @AutoValue
 public abstract class EmbedData<T> {
 
-  // (-- LINT.IfChange --)
   /** The type of task for which the embedding will be used. */
   public enum TaskType {
     /** Unset value, which will default to one of the other enum values. */
@@ -62,13 +61,6 @@ public abstract class EmbedData<T> {
       return value;
     }
   }
-
-  // (--
-  // LINT.ThenChange(
-  // //depot/https://github.com/google-ai-edge/ai-edge-apis/tree/main/local_agents/rag/core/protos/embedding_models.proto,
-  // //depot/https://github.com/google-ai-edge/ai-edge-apis/tree/main/local_agents/rag/java/com/google/ai/edge/localagents/rag/models/GeckoEmbeddingModel.java
-  // )
-  // --)
 
   public abstract T getData();
 

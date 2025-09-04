@@ -20,7 +20,6 @@ option java_multiple_files = true;
 option java_package = "com.google.ai.edge.localagents.rag.models.proto";
 
 message EmbedText {
-  // (-- LINT.IfChange --)
   // Type of task for which the embedding will be used.
   enum TaskType {
     // Unset value, which will default to one of the other enum values.
@@ -50,13 +49,6 @@ message EmbedText {
     // Specifies that the given text will be used for code retrieval.
     CODE_RETRIEVAL = 8;
   }
-  // (--
-  // LINT.ThenChange(
-  // //depot/https://github.com/google-ai-edge/ai-edge-apis/tree/main/local_agents/rag/java/com/google/ai/edge/localagents/rag/models/EmbedData.java,
-  // //depot/https://github.com/google-ai-edge/ai-edge-apis/tree/main/local_agents/rag/java/com/google/ai/edge/localagents/rag/models/GeckoEmbeddingModel.java
-  // )
-  // --)
-  // The task type.
   optional TaskType task = 1;
   // Optional identifier of the text content. This may be prepended to the
   // input or otherwise used within a prompt, depending on the task-specific
