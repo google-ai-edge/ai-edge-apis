@@ -39,6 +39,9 @@ ai_edge_files(
 # The minor version code should be bumped after every release.
 RAG_SDK_VERSION = "0.3.0"
 
+# Define to override the MediaPipe version. Example: --define "MEDIAPIPE_VERSION=0.10.28"
+vardef("MEDIAPIPE_VERSION", MEDIAPIPE_FULL_VERSION)
+
 android_library(
     name = "rag_lib",
     srcs = [
