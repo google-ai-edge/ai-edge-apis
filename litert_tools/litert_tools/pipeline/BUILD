@@ -16,8 +16,6 @@
 load("@ai_edge_apis_pip_deps//:requirements.bzl", "requirement")
 load("//local_agents/core/proto:build_config.bzl", "ai_edge_proto_library")
 
-package(default_visibility = ["//visibility:public"])
-
 ai_edge_proto_library(
     name = "llm_parameters_proto",
     srcs = ["llm_parameters.proto"],
