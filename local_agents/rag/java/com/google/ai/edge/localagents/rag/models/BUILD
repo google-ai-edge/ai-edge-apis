@@ -69,21 +69,6 @@ android_library(
 )
 
 android_library(
-    name = "aratea_embedding_model",
-    srcs = ["ArateaEmbeddingModel.java"],
-    deps = [
-        ":embedder",
-        ":entities",
-        "//java/com/google/android/apps/miphone/astrea/privateinference/library:private_inference_request_metadata",
-        "//java/com/google/android/libraries/mdi/privatearatea:private_aratea_client",
-        "//search/mdi/privatearatea/proto:content_java_proto_lite",
-        "//search/mdi/privatearatea/proto:private_aratea_service_java_proto_lite",
-        "//third_party/java/androidx/appcompat",
-        "@maven//:com_google_guava_guava",
-    ],
-)
-
-android_library(
     name = "gemma_embedding_model",
     srcs = ["GemmaEmbeddingModel.java"],
     deps = [
