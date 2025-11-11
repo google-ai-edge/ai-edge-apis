@@ -43,11 +43,21 @@ java_plugin(
     ],
 )
 
+java_plugin(
+    name = "auto_oneof_plugin",
+    processor_class = "com.google.auto.value.processor.AutoOneOfProcessor",
+    deps = [
+        "@maven//:com_google_auto_value_auto_value",
+        "@maven//:com_google_auto_value_auto_value_annotations",
+    ],
+)
+
 android_library(
     name = "autovalue",
     exported_plugins = [
         ":autovalue_plugin",
         ":autobuilder_plugin",
+        ":auto_oneof_plugin",
     ],
     neverlink = 1,
     exports = [

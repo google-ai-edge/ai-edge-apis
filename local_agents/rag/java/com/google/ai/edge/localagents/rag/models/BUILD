@@ -129,3 +129,12 @@ android_library(
         "@maven//:org_checkerframework_checker_qual",
     ],
 )
+
+android_library(
+    name = "part",
+    srcs = ["Part.java"],
+    deps = [
+        "//third_party:autovalue",
+        "@protobuf//:protobuf_javalite",
+    ],
+)
