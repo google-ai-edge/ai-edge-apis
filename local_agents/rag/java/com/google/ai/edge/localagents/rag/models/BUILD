@@ -132,9 +132,15 @@ android_library(
 
 android_library(
     name = "part",
-    srcs = ["Part.java"],
+    srcs = [
+        "EmbedderAdapter.java",
+        "Part.java",
+    ],
     deps = [
+        ":embedder",
+        ":entities",
         "//third_party:autovalue",
+        "@maven//:com_google_guava_guava",
         "@protobuf//:protobuf_javalite",
     ],
 )
