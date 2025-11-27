@@ -564,7 +564,7 @@ class LiteRTLlmPipelineLoader(LlmPipelineLoader):
       interpreter = interpreter_lib.InterpreterWithCustomOps(
           custom_op_registerers=["pywrap_genai_ops.GenAIOpsRegisterer"],
           model_path=model_path,
-          num_threads=2,  # Consider making num_threads configurable
+          num_threads=os.cpu_count() or 2,  # Consider making num_threads configurable
           experimental_default_delegate_latest_features=True,
       )
     except Exception as e:
