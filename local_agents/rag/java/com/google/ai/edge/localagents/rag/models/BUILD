@@ -31,6 +31,7 @@ filegroup(
         "AsyncProgressListener.java",
         "EmbedData.java",
         "Embedder.java",
+        "EmbedderAdapter.java",
         "EmbeddingRequest.java",
         "GeckoEmbeddingModel.java",
         "GeminiEmbedder.java",
@@ -39,6 +40,7 @@ filegroup(
         "LanguageModelRequest.java",
         "LanguageModelResponse.java",
         "MediaPipeLlmBackend.java",
+        "Part.java",
     ],
 )
 
@@ -51,6 +53,7 @@ android_library(
         "LanguageModelResponse.java",
     ],
     deps = [
+        ":part",
         "//third_party:autovalue",
         "@maven//:com_google_guava_guava",
         "@maven//:org_jspecify_jspecify",

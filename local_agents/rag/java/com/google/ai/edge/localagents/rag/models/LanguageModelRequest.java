@@ -14,19 +14,27 @@
 package com.google.ai.edge.localagents.rag.models;
 
 import com.google.auto.value.AutoValue;
+import com.google.common.collect.ImmutableList;
 
 /** The language model inference request. */
 @AutoValue
 public abstract class LanguageModelRequest {
-  /** The prompt to use for the generation. */
+  /** The main prompt to use for the generation. */
   public abstract String getPrompt();
+
+  /** Additional parts to use for the generation (e.g. images, audio or additional context). */
+  public abstract ImmutableList<Part> getParts();
 
   public static Builder builder() {
     return new AutoValue_LanguageModelRequest.Builder();
   }
 
   public static LanguageModelRequest create(String prompt) {
-    return builder().setPrompt(prompt).build();
+    return builder().setPrompt(prompt).setParts(ImmutableList.of()).build();
+  }
+
+  public static LanguageModelRequest create(String prompt, ImmutableList<Part> parts) {
+    return builder().setPrompt(prompt).setParts(parts).build();
   }
 
   public abstract Builder toBuilder();
@@ -35,6 +43,8 @@ public abstract class LanguageModelRequest {
   @AutoValue.Builder
   public abstract static class Builder {
     public abstract Builder setPrompt(String prompt);
+
+    public abstract Builder setParts(ImmutableList<Part> parts);
 
     public abstract LanguageModelRequest build();
   }

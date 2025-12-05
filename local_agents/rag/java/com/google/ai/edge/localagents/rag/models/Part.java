@@ -36,7 +36,9 @@ public abstract class Part {
     /** The possible MIME types for inline data. */
     public enum MimeType {
       IMAGE_PNG("image/png"),
-      IMAGE_JPEG("image/jpeg");
+      IMAGE_JPEG("image/jpeg"),
+      IMAGE("image/*"),
+      AUDIO("audio/*");
 
       private final String value;
 

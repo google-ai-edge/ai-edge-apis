@@ -76,8 +76,7 @@ public final class RetrievalAndInferenceChain
                   .getPromptBuilder()
                   .get() // Or throw.
                   .buildPrompt(memoryString, retrievalRequest.getQuery());
-          LanguageModelRequest languageModelRequest =
-              LanguageModelRequest.builder().setPrompt(prompt).build();
+          LanguageModelRequest languageModelRequest = LanguageModelRequest.create(prompt);
           return config
               .getLanguageModel()
               .get() // Or throw.
