@@ -19,6 +19,7 @@ These classes can be used to create custom prompt builders. The `PromptBuilder`
 class represents a container of turns. A `Turn` represents a single turn in the
 conversation. Different Turn/PromptBuilder classes can be composed together.
 """
+
 import abc
 import enum
 from typing import Generic, List, Optional, Type, TypeVar
